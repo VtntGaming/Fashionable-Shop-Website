@@ -13,9 +13,9 @@ export default function PaymentResult() {
     const params = searchParams.toString();
     if (params) {
       paymentApi.vnpayReturn(params)
-        .then((res: { success?: boolean; orderId?: number }) => {
-          setStatus(res.success ? 'success' : 'failed');
-          setOrderId(res.orderId || null);
+        .then((res: { status?: string; orderId?: number }) => {
+          setStatus(res?.status === 'SUCCESS' ? 'success' : 'failed');
+          setOrderId(res?.orderId || null);
         })
         .catch(() => setStatus('failed'));
     } else {
