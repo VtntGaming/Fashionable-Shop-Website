@@ -123,3 +123,20 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1a1;
 }
+
+/* Smooth focus styles */
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
+}
+
+/* Better button interactions */
+button {
+  cursor: pointer;
+}
+
+/* Link smooth transitions */
+a {
+  transition: color 0.2s ease;
+}

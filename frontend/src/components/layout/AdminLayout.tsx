@@ -7,7 +7,7 @@ import { logout } from '@/store/authSlice';
 import toast from 'react-hot-toast';
 
 const menuItems = [
-  { path: '/admin/dashboard', label: 'Bảng điều khiển', icon: LayoutDashboard },
+  { path: '/admin', label: 'Bảng điều khiển', icon: LayoutDashboard, exact: true },
   { path: '/admin/products', label: 'Sản phẩm', icon: Package },
   { path: '/admin/categories', label: 'Danh mục', icon: FolderTree },
   { path: '/admin/orders', label: 'Đơn hàng', icon: ShoppingBag },
@@ -38,7 +38,7 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-primary text-white transform transition-transform lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
-          <Link to="/admin/dashboard" className="flex items-center gap-2">
+          <Link to="/admin" className="flex items-center gap-2">
             <span className="text-xl font-bold">Fashion</span>
             <span className="text-xl font-light text-accent">Admin</span>
           </Link>
@@ -48,7 +48,7 @@ export default function AdminLayout() {
         </div>
         <nav className="px-3 py-4 space-y-1 flex-1">
           {menuItems.map((item) => {
-            const isActive = location.pathname === item.path;
+            const isActive = item.exact ? location.pathname === item.path : location.pathname.startsWith(item.path);
             return (
               <Link
                 key={item.path}

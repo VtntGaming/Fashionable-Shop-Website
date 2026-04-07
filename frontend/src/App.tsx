@@ -3,6 +3,8 @@ import { Toaster } from 'react-hot-toast';
 import UserLayout from '@/components/layout/UserLayout';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { PrivateRoute, AdminRoute, GuestRoute } from '@/components/common/RouteGuards';
+import ScrollToTop from '@/components/common/ScrollToTop';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
 import { lazy, Suspense } from 'react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
@@ -39,8 +41,10 @@ function App() {
   return (
     <>
       <Toaster position="top-right" toastOptions={{ duration: 3000, style: { fontFamily: 'Lexend, sans-serif' } }} />
-      <Suspense fallback={<LoadingSpinner />}>
-        <Routes>
+      <ScrollToTop />
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
           {/* Public routes with UserLayout */}
           <Route element={<UserLayout />}>
             <Route path="/" element={<Home />} />
@@ -86,8 +90,9 @@ function App() {
               <Route path="reports" element={<Reports />} />
             </Route>
           </Route>
-        </Routes>
-      </Suspense>
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
     </>
   );
 }

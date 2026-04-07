@@ -32,13 +32,30 @@ export default function Login() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Đăng nhập</h1>
-          <p className="text-gray-500 text-sm">Chào mừng bạn quay trở lại!</p>
+      <div className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden rounded-2xl shadow-lg border border-gray-200">
+        {/* Left - Illustration */}
+        <div className="hidden md:flex flex-col justify-center bg-gradient-to-br from-primary to-primary-light text-white p-10">
+          <div className="mb-8">
+            <span className="text-3xl font-bold">Fashion</span>
+            <span className="text-3xl font-light text-accent">Shop</span>
+          </div>
+          <h2 className="text-2xl font-bold leading-tight mb-4">Chào mừng bạn<br />quay trở lại!</h2>
+          <p className="text-gray-300 text-sm leading-relaxed">
+            Đăng nhập để khám phá bộ sưu tập thời trang mới nhất, nhận ưu đãi độc quyền và quản lý đơn hàng dễ dàng.
+          </p>
+          <div className="mt-8 flex gap-6 text-sm">
+            <div><span className="text-accent font-bold text-xl">1000+</span><p className="text-gray-400 mt-1">Sản phẩm</p></div>
+            <div><span className="text-accent font-bold text-xl">500+</span><p className="text-gray-400 mt-1">Đánh giá</p></div>
+            <div><span className="text-accent font-bold text-xl">99%</span><p className="text-gray-400 mt-1">Hài lòng</p></div>
+          </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        {/* Right - Form */}
+        <div className="bg-white p-8 md:p-10">
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold mb-2">Đăng nhập</h1>
+            <p className="text-gray-500 text-sm">Nhập thông tin tài khoản để tiếp tục</p>
+          </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1.5">Email</label>

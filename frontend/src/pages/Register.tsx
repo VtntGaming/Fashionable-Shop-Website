@@ -33,13 +33,31 @@ export default function Register() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Tạo tài khoản</h1>
-          <p className="text-gray-500 text-sm">Đăng ký để trải nghiệm mua sắm tuyệt vời</p>
+      <div className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden rounded-2xl shadow-lg border border-gray-200">
+        {/* Left - Illustration */}
+        <div className="hidden md:flex flex-col justify-center bg-gradient-to-br from-primary to-primary-light text-white p-10">
+          <div className="mb-8">
+            <span className="text-3xl font-bold">Fashion</span>
+            <span className="text-3xl font-light text-accent">Shop</span>
+          </div>
+          <h2 className="text-2xl font-bold leading-tight mb-4">Tham gia cùng<br />chúng tôi!</h2>
+          <p className="text-gray-300 text-sm leading-relaxed">
+            Tạo tài khoản ngay để nhận ưu đãi dành riêng cho thành viên mới, theo dõi đơn hàng và lưu sản phẩm yêu thích.
+          </p>
+          <div className="mt-8 space-y-3 text-sm text-gray-300">
+            <div className="flex items-center gap-3"><span className="w-6 h-6 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-bold">✓</span> Ưu đãi dành cho thành viên mới</div>
+            <div className="flex items-center gap-3"><span className="w-6 h-6 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-bold">✓</span> Theo dõi đơn hàng dễ dàng</div>
+            <div className="flex items-center gap-3"><span className="w-6 h-6 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-bold">✓</span> Lưu sản phẩm yêu thích</div>
+          </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        {/* Right - Form */}
+        <div className="bg-white p-8 md:p-10">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold mb-2">Tạo tài khoản</h1>
+            <p className="text-gray-500 text-sm">Đăng ký để bắt đầu mua sắm</p>
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1.5">Họ và tên</label>

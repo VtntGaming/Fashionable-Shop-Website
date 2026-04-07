@@ -21,6 +21,24 @@ const SORT_OPTIONS = [
   { value: 'averageRating-desc', label: 'Đánh giá cao' },
 ];
 
+function toArray<T>(value: T[] | { content?: T[] } | null | undefined): T[] {
+  if (Array.isArray(value)) return value;
+  if (value && Array.isArray((value as { content?: T[] }).content)) {
+    return (value as { content?: T[] }).content ?? [];
+  }
+  return [];
+}
+
+function dedupeBy<T>(items: T[], getKey: (item: T, index: number) => string | number | undefined) {
+  const seen = new Set<string | number>();
+  return items.filter((item, index) => {
+    const key = getKey(item, index) ?? `fallback-${index}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
@@ -40,7 +58,9 @@ export default function Shop() {
   const maxPrice = searchParams.get('maxPrice') || '';
 
   useEffect(() => {
-    categoryApi.getCategories().then(setCategories).catch(() => {});
+    categoryApi.getCategories()
+      .then((res) => setCategories(dedupeBy(toArray(res), (item) => (item as Category).id ?? (item as Category).slug)))
+      .catch(() => setCategories([]));
   }, []);
 
   useEffect(() => {
@@ -59,10 +79,14 @@ export default function Shop() {
           ...(maxPrice && { maxPrice: parseInt(maxPrice) }),
         };
         const res = await productApi.getProducts(filter);
-        setProducts(res.content);
-        setTotalPages(res.totalPages);
-        setTotalElements(res.totalElements);
-      } catch { setProducts([]); }
+        setProducts(dedupeBy(toArray(res?.content), (item) => (item as Product).id ?? (item as Product).slug));
+        setTotalPages(typeof res?.totalPages === 'number' ? res.totalPages : 0);
+        setTotalElements(typeof res?.totalElements === 'number' ? res.totalElements : 0);
+      } catch {
+        setProducts([]);
+        setTotalPages(0);
+        setTotalElements(0);
+      }
       finally { setLoading(false); }
     }
     fetchProducts();
@@ -109,7 +133,7 @@ export default function Shop() {
       <div className="flex gap-6">
         {/* Sidebar - Desktop always visible, mobile as overlay */}
         <aside className={`${filterOpen ? 'fixed inset-0 z-50 bg-black/50 lg:bg-transparent lg:static lg:z-auto' : 'hidden lg:block'} lg:w-60 flex-shrink-0`}>
-          <div className={`${filterOpen ? 'absolute right-0 top-0 h-full w-80 bg-white p-4 overflow-y-auto lg:static lg:w-auto lg:p-0' : ''}`}>
+          <div className={`${filterOpen ? 'absolute right-0 top-0 h-full w-80 bg-white p-4 overflow-y-auto lg:static lg:w-auto lg:p-0' : 'bg-white border border-gray-200 rounded-xl p-4'}`}>
             {filterOpen && (
               <div className="flex items-center justify-between mb-4 lg:hidden">
                 <h3 className="font-semibold">Bộ lọc</h3>
@@ -127,9 +151,9 @@ export default function Shop() {
                 >
                   Tất cả
                 </button>
-                {categories.map((cat) => (
+                {Array.isArray(categories) && categories.map((cat, index) => (
                   <button
-                    key={cat.id}
+                    key={`category-${cat.id ?? cat.slug ?? index}`}
                     onClick={() => { updateParams({ categoryId: String(cat.id) }); setFilterOpen(false); }}
                     className={`block w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${categoryId === String(cat.id) ? 'bg-accent/10 text-accent font-medium' : 'hover:bg-gray-50'}`}
                   >
@@ -192,8 +216,8 @@ export default function Shop() {
           ) : (
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {products.map((p) => (
-                  <ProductCard key={p.id} product={p} onAddToCart={isAuthenticated ? addToCart : undefined} />
+                {products.map((p, index) => (
+                  <ProductCard key={`shop-${p.id ?? p.slug ?? index}`} product={p} onAddToCart={isAuthenticated ? addToCart : undefined} />
                 ))}
               </div>
               <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => updateParams({ page: String(p) })} />

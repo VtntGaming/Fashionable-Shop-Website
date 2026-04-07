@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ShoppingCart, Heart, User, Menu, X, Search, LogOut, Settings, Package, ChevronDown } from 'lucide-react';
 import type { RootState, AppDispatch } from '@/store';
@@ -12,6 +12,7 @@ export default function Header() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, user } = useSelector((s: RootState) => s.auth);
   const { itemCount } = useSelector((s: RootState) => s.cart);
@@ -44,9 +45,9 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link to="/" className="text-sm font-medium hover:text-accent transition-colors">Trang chủ</Link>
-            <Link to="/shop" className="text-sm font-medium hover:text-accent transition-colors">Cửa hàng</Link>
-            <Link to="/vouchers" className="text-sm font-medium hover:text-accent transition-colors">Khuyến mãi</Link>
+            <Link to="/" className={`text-sm font-medium transition-colors ${location.pathname === '/' ? 'text-accent' : 'hover:text-accent'}`}>Trang chủ</Link>
+            <Link to="/shop" className={`text-sm font-medium transition-colors ${location.pathname.startsWith('/shop') || location.pathname.startsWith('/product') ? 'text-accent' : 'hover:text-accent'}`}>Cửa hàng</Link>
+            <Link to="/vouchers" className={`text-sm font-medium transition-colors ${location.pathname === '/vouchers' ? 'text-accent' : 'hover:text-accent'}`}>Khuyến mãi</Link>
           </nav>
 
           {/* Search */}
@@ -103,7 +104,7 @@ export default function Header() {
                         <Package size={16} /> Đơn hàng
                       </Link>
                       {user?.role === 'ADMIN' && (
-                        <Link to="/admin/dashboard" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors text-accent font-medium">
+                        <Link to="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors text-accent font-medium">
                           <Settings size={16} /> Quản trị
                         </Link>
                       )}

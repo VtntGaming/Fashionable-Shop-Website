@@ -40,9 +40,9 @@ export default function Cart() {
         {/* Cart items */}
         <div className="lg:col-span-2 space-y-4">
           {items.map((item) => (
-            <div key={item.id} className="bg-white border border-gray-100 rounded-xl p-4 flex gap-4">
-              <Link to={`/shop`} className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                <ImageWithFallback src={item.productImage} alt={item.productName} className="w-full h-full object-cover" />
+            <div key={item.id} className="bg-white border border-gray-200 rounded-xl p-4 flex gap-4 hover:shadow-sm transition-shadow">
+              <Link to={`/product/${item.productId}`} className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+                <ImageWithFallback src={item.productImage} alt={item.productName} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
               </Link>
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-sm truncate">{item.productName}</h3>
@@ -67,7 +67,7 @@ export default function Cart() {
         </div>
 
         {/* Summary */}
-        <div className="bg-white border border-gray-100 rounded-xl p-6 h-fit sticky top-24">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 h-fit sticky top-24 shadow-sm">
           <h2 className="font-bold mb-4">Tóm tắt đơn hàng</h2>
           <div className="space-y-2 mb-4 text-sm">
             <div className="flex justify-between">

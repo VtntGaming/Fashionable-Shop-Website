@@ -17,6 +17,24 @@ import { formatRelative } from '@/utils/formatDate';
 import { useCart } from '@/hooks/useCart';
 import toast from 'react-hot-toast';
 
+function toArray<T>(value: T[] | { content?: T[] } | null | undefined): T[] {
+  if (Array.isArray(value)) return value;
+  if (value && Array.isArray((value as { content?: T[] }).content)) {
+    return (value as { content?: T[] }).content ?? [];
+  }
+  return [];
+}
+
+function dedupeBy<T>(items: T[], getKey: (item: T, index: number) => string | number | undefined) {
+  const seen = new Set<string | number>();
+  return items.filter((item, index) => {
+    const key = getKey(item, index) ?? `fallback-${index}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
   const [product, setProduct] = useState<Product | null>(null);
@@ -45,9 +63,12 @@ export default function ProductDetail() {
             reviewApi.getProductReviews(p.id, { page: 0, size: 10 }),
             recommendationApi.getSimilarProducts(p.id, 6),
           ]);
-          setReviews(revRes.content);
-          setSimilar(simRes);
-        } catch { /* silent */ }
+          setReviews(dedupeBy(toArray(revRes?.content ?? revRes), (item) => (item as Review).id));
+          setSimilar(dedupeBy(toArray(simRes), (item) => (item as ProductRecommendation).id ?? (item as ProductRecommendation).slug));
+        } catch {
+          setReviews([]);
+          setSimilar([]);
+        }
         if (isAuthenticated) {
           try { const w = await wishlistApi.checkWishlist(p.id); setIsWishlisted(w); } catch { /* silent */ }
         }
@@ -81,7 +102,7 @@ export default function ProductDetail() {
     setSubmittingReview(true);
     try {
       const newReview = await reviewApi.createReview({ productId: product.id, rating: reviewRating, comment: reviewComment });
-      setReviews([newReview, ...reviews]);
+      setReviews((prev) => [newReview, ...prev]);
       setReviewComment('');
       setReviewRating(5);
       toast.success('Đã gửi đánh giá!');
@@ -92,7 +113,9 @@ export default function ProductDetail() {
   if (loading) return <LoadingSpinner />;
   if (!product) return <div className="text-center py-16"><p>Không tìm thấy sản phẩm.</p><Link to="/shop" className="text-accent mt-4 inline-block">Quay lại cửa hàng</Link></div>;
 
-  const images = product.images?.length > 0 ? product.images : [product.imageUrl];
+  const images = Array.isArray(product.images) && product.images.length > 0
+    ? product.images.filter(Boolean)
+    : (product.imageUrl ? [product.imageUrl] : []);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -208,12 +231,12 @@ export default function ProductDetail() {
           </form>
         )}
 
-        {reviews.length === 0 ? (
+        {!Array.isArray(reviews) || reviews.length === 0 ? (
           <p className="text-gray-500 text-sm">Chưa có đánh giá nào cho sản phẩm này.</p>
         ) : (
           <div className="space-y-4">
-            {reviews.map((r) => (
-              <div key={r.id} className="border border-gray-100 rounded-xl p-4">
+            {reviews.map((r, index) => (
+              <div key={`review-${r.id ?? index}`} className="border border-gray-100 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <StarRating rating={r.rating} size={14} />
                   <span className="text-xs text-gray-500">{formatRelative(r.createdAt)}</span>
@@ -226,12 +249,12 @@ export default function ProductDetail() {
       </section>
 
       {/* Similar products */}
-      {similar.length > 0 && (
+      {Array.isArray(similar) && similar.length > 0 && (
         <section>
           <h2 className="text-xl font-bold mb-6">Sản phẩm tương tự</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {similar.map((p) => (
-              <ProductCard key={p.id} product={p} onAddToCart={isAuthenticated ? addToCart : undefined} />
+            {similar.map((p, index) => (
+              <ProductCard key={`similar-${p.id ?? p.slug ?? index}`} product={p} onAddToCart={isAuthenticated ? addToCart : undefined} />
             ))}
           </div>
         </section>
