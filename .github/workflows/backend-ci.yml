@@ -3,11 +3,11 @@ name: Fashion Shop Backend CI
 on:
   push:
     paths:
-      - 'fashion-shop/**'
+      - 'backend/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
     paths:
-      - 'fashion-shop/**'
+      - 'backend/**'
       - '.github/workflows/backend-ci.yml'
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: fashion-shop
+        working-directory: backend
 
     steps:
       - name: Checkout
