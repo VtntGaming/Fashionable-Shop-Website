@@ -1,0 +1,10 @@
+$kind: http-request
+name: VNPay Return
+method: GET
+url: '{{baseUrl}}/api/payments/vnpay/return'
+order: 2000
+queryParams:
+  - key: vnp_TxnRef
+    value: '{{vnp_TxnRef}}'
+  - key: vnp_ResponseCode
+    value: '00'

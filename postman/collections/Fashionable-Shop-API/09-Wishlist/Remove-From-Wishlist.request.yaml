@@ -1,0 +1,10 @@
+$kind: http-request
+name: Remove From Wishlist
+method: DELETE
+url: '{{baseUrl}}/api/wishlists/{{productId}}'
+order: 3000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'

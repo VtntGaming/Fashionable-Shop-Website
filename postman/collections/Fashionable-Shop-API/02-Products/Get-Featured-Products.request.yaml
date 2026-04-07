@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Featured Products
+method: GET
+url: '{{baseUrl}}/api/products/featured'
+order: 5000

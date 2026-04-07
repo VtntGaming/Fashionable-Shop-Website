@@ -1,0 +1,23 @@
+$kind: http-request
+name: Create Category
+method: POST
+url: '{{baseUrl}}/api/categories'
+order: 5000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Men's Clothing",
+      "slug": "mens-clothing",
+      "description": "All men's clothing items",
+      "imageUrl": "https://example.com/category.jpg",
+      "parentId": null
+    }

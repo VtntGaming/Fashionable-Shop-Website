@@ -1,0 +1,16 @@
+$kind: http-request
+name: Upload Avatar
+method: POST
+url: '{{baseUrl}}/api/files/avatars'
+order: 2000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+body:
+  type: formdata
+  content:
+    - key: file
+      type: file
+      src: ''

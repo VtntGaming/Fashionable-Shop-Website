@@ -1,0 +1,28 @@
+$kind: http-request
+name: Create Product
+method: POST
+url: '{{baseUrl}}/api/products'
+order: 6000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Classic T-Shirt",
+      "slug": "classic-t-shirt",
+      "description": "A comfortable classic t-shirt",
+      "price": 29.99,
+      "salePrice": 24.99,
+      "stock": 100,
+      "categoryId": 1,
+      "brand": "FashionBrand",
+      "imageUrl": "https://example.com/image.jpg",
+      "additionalImages": []
+    }

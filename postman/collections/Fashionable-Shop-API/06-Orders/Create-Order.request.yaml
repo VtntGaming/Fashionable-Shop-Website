@@ -1,0 +1,19 @@
+$kind: http-request
+name: Create Order
+method: POST
+url: "{{baseUrl}}/api/orders"
+order: 4000
+auth:
+  type: bearer
+  credentials:
+    token: "{{authToken}}"
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "shippingAddress": "123 Main St, City",
+      "phone": "0123456789",
+      "paymentMethod": "VNPAY"
+    }

@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Product Average Rating
+method: GET
+url: '{{baseUrl}}/api/reviews/product/{{productId}}/rating'
+order: 8000

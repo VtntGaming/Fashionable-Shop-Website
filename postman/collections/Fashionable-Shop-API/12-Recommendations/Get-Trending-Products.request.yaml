@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Trending Products
+method: GET
+url: '{{baseUrl}}/api/recommendations/trending'
+order: 4000

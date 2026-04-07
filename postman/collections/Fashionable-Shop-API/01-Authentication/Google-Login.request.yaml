@@ -1,0 +1,15 @@
+$kind: http-request
+name: Google Login
+method: POST
+url: "{{baseUrl}}/api/auth/google"
+order: 6000
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "googleId": "e",
+      "email": "test@gmail.com",
+      "fullName": "User Name"
+    }

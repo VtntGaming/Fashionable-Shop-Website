@@ -1,0 +1,21 @@
+$kind: http-request
+name: Checkout
+method: POST
+url: '{{baseUrl}}/api/orders/checkout'
+order: 5000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "shippingAddress": "123 Main St, City",
+      "phone": "0123456789",
+      "paymentMethod": "VNPAY"
+    }

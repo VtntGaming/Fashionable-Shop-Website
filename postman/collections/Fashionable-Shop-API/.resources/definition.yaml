@@ -1,0 +1,9 @@
+$kind: collection
+name: Fashionable Shop API
+description: Complete API collection for the Fashionable Shop e-commerce
+  platform. Covers authentication, products, categories, cart, orders, reviews,
+  vouchers, wishlist, payments, file uploads, recommendations, and admin
+  statistics.
+variables:
+  baseUrl: http://localhost:8080
+  authToken: ""

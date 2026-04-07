@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fashion Shop - VNPay Flow Test</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-soft: #1f2937;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #60a5fa;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: rgba(148, 163, 184, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .container {
+      width: min(1250px, calc(100% - 32px));
+      margin: 28px auto;
+    }
+
+    .hero,
+    .card {
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    .hero {
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(96, 165, 250, 0.14);
+      color: #bfdbfe;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      padding: 18px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
+    }
+
+    .two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button,
+    a.link-btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover,
+    a.link-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+    }
+
+    .secondary {
+      background: #1f2937;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .success-btn {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: white;
+    }
+
+    .status {
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-top: 12px;
+      border: 1px solid transparent;
+    }
+
+    .status.info {
+      background: rgba(96, 165, 250, 0.12);
+      border-color: rgba(96, 165, 250, 0.35);
+      color: #bfdbfe;
+    }
+
+    .status.success {
+      background: rgba(34, 197, 94, 0.12);
+      border-color: rgba(34, 197, 94, 0.35);
+      color: #bbf7d0;
+    }
+
+    .status.error {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.35);
+      color: #fecaca;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .tips {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .tips li + li {
+      margin-top: 6px;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      min-height: 170px;
+      color: #dbeafe;
+      overflow: auto;
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    code {
+      background: rgba(148, 163, 184, 0.12);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .summary-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(31, 41, 55, 0.8);
+      font-size: 14px;
+    }
+
+    .summary-item strong {
+      display: inline-block;
+      min-width: 92px;
+      color: #bfdbfe;
+    }
+
+    @media (max-width: 760px) {
+      .two-cols {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <span class="pill">Developer flow test</span>
+      <h1>VNPay Test Page for Fashion Shop</h1>
+      <p>
+        Trang này bám theo đúng flow back-end đã preview: <code>POST /api/carts/add</code>
+        → <code>POST /api/orders</code> → <code>POST /api/payments/vnpay/create</code>.
+        Người test chỉ cần nhập dữ liệu API thô rồi chạy từng bước hoặc full flow.
+      </p>
+      <div class="hero-actions">
+        <a class="link-btn secondary" href="./index.html">← Quay lại trang test Google</a>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>1) Nhập dữ liệu API</h2>
+
+        <div class="field">
+          <label for="backendUrl">Backend URL</label>
+          <input id="backendUrl" value="http://localhost:8080" />
+        </div>
+
+        <div class="field">
+          <label for="bearerToken">Bearer Token</label>
+          <textarea id="bearerToken" placeholder="Dán access token vào đây. Có thể lấy từ /api/auth/login hoặc từ trang test Google."></textarea>
+        </div>
+
+        <div class="two-cols">
+          <div class="field">
+            <label for="productId">Product ID</label>
+            <input id="productId" type="number" min="1" placeholder="Ví dụ: 11" />
+          </div>
+
+          <div class="field">
+            <label for="quantity">Quantity</label>
+            <input id="quantity" type="number" min="1" value="1" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="shippingAddress">Shipping Address</label>
+          <input id="shippingAddress" value="123 Dev Street, Ho Chi Minh City" />
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" value="0900000000" />
+        </div>
+
+        <div class="field">
+          <label for="returnUrl">Return URL</label>
+          <input id="returnUrl" />
+        </div>
+
+        <div class="actions">
+          <button id="saveConfigBtn" class="primary">Lưu dữ liệu</button>
+          <button id="previewBackendBtn" class="secondary">Preview back-end</button>
+          <button id="useCurrentPageBtn" class="secondary">Dùng trang hiện tại làm return URL</button>
+        </div>
+
+        <ul class="tips">
+          <li>Cart và order cần <b>JWT access token</b> hợp lệ.</li>
+          <li>Return URL nên trùng với <code>VNPAY_RETURN_URL</code> đã cấu hình/đăng ký với VNPay; dùng URL lạ rất dễ bị báo <code>Dữ liệu gửi sang không đúng định dạng</code>.</li>
+          <li>Nếu muốn nhận callback VNPay về lại page này, hãy mở file qua <b>HTTP</b> (Live Server hoặc static server), không nên dùng <code>file://</code>.</li>
+          <li>Nếu back-end báo <code>VNPay is not configured</code>, cần set <code>VNPAY_TMN_CODE</code> và <code>VNPAY_HASH_SECRET</code>.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>2) Chạy flow thanh toán</h2>
+        <p class="muted">Có thể chạy từng bước riêng hoặc bấm full flow cho nhanh.</p>
+
+        <div class="actions">
+          <button id="runFullFlowBtn" class="success-btn">Run full flow</button>
+          <button id="addToCartBtn" class="primary">1. Add to cart</button>
+          <button id="getCartBtn" class="secondary">Xem cart</button>
+          <button id="createOrderBtn" class="primary">2. Create order</button>
+          <button id="createPaymentBtn" class="primary">3. Create VNPay URL</button>
+          <button id="openPaymentBtn" class="success-btn">4. Open VNPay</button>
+          <button id="checkPaymentBtn" class="secondary">5. Check payment</button>
+          <button id="clearLogsBtn" class="secondary">Xóa log</button>
+        </div>
+
+        <div id="statusBox" class="status info">Sẵn sàng test VNPay flow.</div>
+
+        <div class="summary-list">
+          <div class="summary-item"><strong>Order ID:</strong> <span id="orderIdText">-</span></div>
+          <div class="summary-item"><strong>Order Code:</strong> <span id="orderCodeText">-</span></div>
+          <div class="summary-item"><strong>Payment:</strong> <span id="paymentStatusText">-</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>3) State hiện tại</h2>
+        <pre id="stateOutput">Chưa có dữ liệu state.</pre>
+      </section>
+
+      <section class="card">
+        <h2>4) Response API gần nhất</h2>
+        <pre id="responseOutput">Chưa gọi API.</pre>
+      </section>
+
+      <section class="card" style="grid-column: 1 / -1;">
+        <h2>5) Workflow log</h2>
+        <pre id="logOutput">[ready] VNPay developer test page đã sẵn sàng.</pre>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'fashionShopVnpayDevConfig';
+    const ORDER_KEY = 'fashionShopVnpayLastOrder';
+    const PAYMENT_KEY = 'fashionShopVnpayLastPayment';
+
+    const backendUrlInput = document.getElementById('backendUrl');
+    const bearerTokenInput = document.getElementById('bearerToken');
+    const productIdInput = document.getElementById('productId');
+    const quantityInput = document.getElementById('quantity');
+    const shippingAddressInput = document.getElementById('shippingAddress');
+    const phoneInput = document.getElementById('phone');
+    const returnUrlInput = document.getElementById('returnUrl');
+
+    const saveConfigBtn = document.getElementById('saveConfigBtn');
+    const previewBackendBtn = document.getElementById('previewBackendBtn');
+    const useCurrentPageBtn = document.getElementById('useCurrentPageBtn');
+    const runFullFlowBtn = document.getElementById('runFullFlowBtn');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const getCartBtn = document.getElementById('getCartBtn');
+    const createOrderBtn = document.getElementById('createOrderBtn');
+    const createPaymentBtn = document.getElementById('createPaymentBtn');
+    const openPaymentBtn = document.getElementById('openPaymentBtn');
+    const checkPaymentBtn = document.getElementById('checkPaymentBtn');
+    const clearLogsBtn = document.getElementById('clearLogsBtn');
+
+    const statusBox = document.getElementById('statusBox');
+    const stateOutput = document.getElementById('stateOutput');
+    const responseOutput = document.getElementById('responseOutput');
+    const logOutput = document.getElementById('logOutput');
+    const orderIdText = document.getElementById('orderIdText');
+    const orderCodeText = document.getElementById('orderCodeText');
+    const paymentStatusText = document.getElementById('paymentStatusText');
+
+    const appState = {
+      lastProducts: null,
+      lastCart: null,
+      lastOrder: safeJsonParse(localStorage.getItem(ORDER_KEY), null),
+      lastPayment: safeJsonParse(localStorage.getItem(PAYMENT_KEY), null)
+    };
+
+    function safeJsonParse(value, fallback) {
+      try {
+        return value ? JSON.parse(value) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function setStatus(message, type = 'info') {
+      statusBox.className = `status ${type}`;
+      statusBox.textContent = message;
+    }
+
+    function logStep(title, payload) {
+      const time = new Date().toLocaleTimeString('vi-VN');
+      const serialized = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
+      logOutput.textContent = `[${time}] ${title}\n${serialized}\n\n${logOutput.textContent}`;
+    }
+
+    function showResponse(title, payload) {
+      responseOutput.textContent = `${title}\n\n${typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2)}`;
+    }
+
+    function persistConfig() {
+      const config = {
+        backendUrl: backendUrlInput.value.trim() || 'http://localhost:8080',
+        bearerToken: bearerTokenInput.value.trim(),
+        productId: productIdInput.value.trim(),
+        quantity: quantityInput.value.trim(),
+        shippingAddress: shippingAddressInput.value.trim(),
+        phone: phoneInput.value.trim(),
+        returnUrl: returnUrlInput.value.trim()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+    }
+
+    function persistState() {
+      if (appState.lastOrder) {
+        localStorage.setItem(ORDER_KEY, JSON.stringify(appState.lastOrder));
+      }
+      if (appState.lastPayment) {
+        localStorage.setItem(PAYMENT_KEY, JSON.stringify(appState.lastPayment));
+      }
+    }
+
+    function getCleanCurrentPageUrl() {
+      if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+        return `${window.location.origin}${window.location.pathname}`;
+      }
+      return 'http://localhost:5500/frontend/vnpay-test.html';
+    }
+
+    function loadSavedConfig() {
+      const saved = safeJsonParse(localStorage.getItem(STORAGE_KEY), {}) || {};
+      const savedToken = localStorage.getItem('fashionShopAccessToken') || saved.bearerToken || '';
+
+      backendUrlInput.value = saved.backendUrl || 'http://localhost:8080';
+      bearerTokenInput.value = savedToken;
+      productIdInput.value = saved.productId || '';
+      quantityInput.value = saved.quantity || '1';
+      shippingAddressInput.value = saved.shippingAddress || '123 Dev Street, Ho Chi Minh City';
+      phoneInput.value = saved.phone || '0900000000';
+      returnUrlInput.value = saved.returnUrl || 'http://localhost:3000/payment-result';
+    }
+
+    function renderState() {
+      const summary = {
+        backendUrl: backendUrlInput.value.trim() || 'http://localhost:8080',
+        productId: productIdInput.value.trim() || null,
+        quantity: quantityInput.value.trim() || null,
+        lastOrderId: appState.lastOrder?.id || null,
+        lastOrderCode: appState.lastOrder?.orderCode || null,
+        paymentUrl: appState.lastPayment?.paymentUrl || null,
+        paymentStatus: appState.lastPayment?.status || appState.lastPayment?.message || null,
+        cartItems: appState.lastCart?.items?.length || 0
+      };
+
+      orderIdText.textContent = summary.lastOrderId || '-';
+      orderCodeText.textContent = summary.lastOrderCode || '-';
+      paymentStatusText.textContent = summary.paymentStatus || '-';
+      stateOutput.textContent = JSON.stringify(summary, null, 2);
+    }
+
+    function getConfig() {
+      const backendUrl = (backendUrlInput.value.trim() || 'http://localhost:8080').replace(/\/$/, '');
+      const bearerToken = bearerTokenInput.value.trim();
+      const productId = Number(productIdInput.value);
+      const quantity = Number(quantityInput.value || 1);
+      const shippingAddress = shippingAddressInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const returnUrl = returnUrlInput.value.trim() || getCleanCurrentPageUrl();
+      return { backendUrl, bearerToken, productId, quantity, shippingAddress, phone, returnUrl };
+    }
+
+    function buildAuthHeader(token) {
+      if (!token) {
+        return null;
+      }
+      return token.startsWith('Bearer ') ? token : `Bearer ${token}`;
+    }
+
+    async function apiRequest(path, options = {}, requireAuth = false) {
+      const { backendUrl, bearerToken } = getConfig();
+      const headers = {
+        Accept: 'application/json',
+        ...(options.body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        ...(options.headers || {})
+      };
+
+      if (requireAuth) {
+        const authHeader = buildAuthHeader(bearerToken);
+        if (!authHeader) {
+          throw new Error('Thiếu Bearer token. Hãy nhập token trước khi test cart/order.');
+        }
+        headers.Authorization = authHeader;
+      }
+
+      const response = await fetch(`${backendUrl}${path}`, {
+        ...options,
+        headers
+      });
+
+      const text = await response.text();
+      let data = text;
+
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = text;
+      }
+
+      if (!response.ok) {
+        const message = typeof data === 'object' && data?.message ? data.message : `HTTP ${response.status}`;
+        throw new Error(message);
+      }
+
+      if (typeof data === 'object' && data && data.success === false) {
+        throw new Error(data.message || 'API returned success=false');
+      }
+
+      return data;
+    }
+
+    async function previewBackend() {
+      persistConfig();
+      setStatus('Đang preview back-end và tải product list...', 'info');
+      const result = await apiRequest('/api/products?page=0&size=8');
+      appState.lastProducts = result?.data?.content || [];
+
+      if (!productIdInput.value && appState.lastProducts.length > 0) {
+        productIdInput.value = String(appState.lastProducts[0].id);
+      }
+
+      renderState();
+      showResponse('Preview back-end /api/products', result);
+      logStep('Preview back-end thành công', result);
+      setStatus(`Back-end OK. Đã tải ${appState.lastProducts.length} sản phẩm.`, 'success');
+    }
+
+    async function addToCart() {
+      persistConfig();
+      const { productId, quantity } = getConfig();
+
+      if (!productId || productId < 1) {
+        throw new Error('Product ID phải lớn hơn 0.');
+      }
+      if (!quantity || quantity < 1) {
+        throw new Error('Quantity phải lớn hơn 0.');
+      }
+
+      setStatus('Đang thêm sản phẩm vào cart...', 'info');
+      const result = await apiRequest('/api/carts/add', {
+        method: 'POST',
+        body: JSON.stringify({ productId, quantity })
+      }, true);
+
+      appState.lastCart = result.data;
+      renderState();
+      showResponse('Add to cart', result);
+      logStep('Đã thêm sản phẩm vào cart', result);
+      setStatus('Add to cart thành công.', 'success');
+      return result;
+    }
+
+    async function getCart() {
+      persistConfig();
+      setStatus('Đang lấy cart hiện tại...', 'info');
+      const result = await apiRequest('/api/carts', {}, true);
+      appState.lastCart = result.data;
+      renderState();
+      showResponse('Get cart', result);
+      logStep('Lấy cart thành công', result);
+      setStatus('Đã lấy cart hiện tại.', 'success');
+      return result;
+    }
+
+    async function createOrder() {
+      persistConfig();
+      const { shippingAddress, phone } = getConfig();
+
+      if (!shippingAddress) {
+        throw new Error('Shipping address không được để trống.');
+      }
+      if (!phone) {
+        throw new Error('Phone không được để trống.');
+      }
+
+      setStatus('Đang tạo order với paymentMethod = VNPAY...', 'info');
+      const result = await apiRequest('/api/orders', {
+        method: 'POST',
+        body: JSON.stringify({
+          shippingAddress,
+          phone,
+          paymentMethod: 'VNPAY'
+        })
+      }, true);
+
+      appState.lastOrder = result.data;
+      persistState();
+      renderState();
+      showResponse('Create order', result);
+      logStep('Đã tạo order', result);
+      setStatus(`Tạo order thành công: ${result.data?.orderCode || result.data?.id}`, 'success');
+      return result;
+    }
+
+    async function createPaymentUrl() {
+      persistConfig();
+      const { returnUrl } = getConfig();
+      const orderId = appState.lastOrder?.id;
+
+      if (!orderId) {
+        throw new Error('Chưa có orderId. Hãy tạo order trước.');
+      }
+      if (!returnUrl) {
+        throw new Error('Return URL đang trống.');
+      }
+
+      setStatus('Đang tạo VNPay payment URL...', 'info');
+      const query = `/api/payments/vnpay/create?orderId=${encodeURIComponent(orderId)}&returnUrl=${encodeURIComponent(returnUrl)}`;
+      const result = await apiRequest(query, { method: 'POST' });
+
+      appState.lastPayment = {
+        ...(result.data || {}),
+        status: 'PENDING'
+      };
+      persistState();
+      renderState();
+      showResponse('Create VNPay URL', result);
+      logStep('Đã tạo VNPay payment URL', result);
+      setStatus('Đã tạo payment URL. Có thể mở VNPay để test.', 'success');
+      return result;
+    }
+
+    function openPaymentPage() {
+      const paymentUrl = appState.lastPayment?.paymentUrl;
+      if (!paymentUrl) {
+        throw new Error('Chưa có payment URL. Hãy tạo payment URL trước.');
+      }
+
+      logStep('Mở trang VNPay', { paymentUrl });
+      setStatus('Đang mở trang thanh toán VNPay...', 'success');
+      window.open(paymentUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    async function checkPaymentStatus() {
+      const orderId = appState.lastOrder?.id;
+      if (!orderId) {
+        throw new Error('Chưa có orderId để kiểm tra payment.');
+      }
+
+      setStatus('Đang kiểm tra payment status...', 'info');
+      const result = await apiRequest(`/api/payments/order/${encodeURIComponent(orderId)}`);
+      appState.lastPayment = {
+        ...(appState.lastPayment || {}),
+        ...(result.data || {})
+      };
+      persistState();
+      renderState();
+      showResponse('Check payment status', result);
+      logStep('Đã kiểm tra payment status', result);
+      setStatus(`Payment status: ${result.data?.status || 'UNKNOWN'}`, 'success');
+      return result;
+    }
+
+    async function runFullFlow() {
+      await addToCart();
+      await createOrder();
+      await createPaymentUrl();
+      setStatus('Full flow xong. Bước tiếp theo: bấm Open VNPay.', 'success');
+    }
+
+    function clearLogs() {
+      responseOutput.textContent = 'Đã xóa response log.';
+      logOutput.textContent = '[ready] Đã xóa log cũ.';
+      setStatus('Đã xóa log hiển thị.', 'info');
+    }
+
+    async function handleVnPayReturn() {
+      const params = new URLSearchParams(window.location.search);
+      if (!params.has('vnp_ResponseCode')) {
+        return;
+      }
+
+      try {
+        setStatus('Phát hiện callback từ VNPay. Đang xác nhận với back-end...', 'info');
+        const result = await apiRequest(`/api/payments/vnpay/return?${params.toString()}`);
+        appState.lastPayment = {
+          ...(appState.lastPayment || {}),
+          ...(result.data || {})
+        };
+        if (result.data?.orderId && !appState.lastOrder?.id) {
+          appState.lastOrder = { ...(appState.lastOrder || {}), id: result.data.orderId };
+        }
+        persistState();
+        renderState();
+        showResponse('VNPay return callback', result);
+        logStep('Đã xử lý callback VNPay', result);
+        setStatus(result.success ? 'Thanh toán VNPay đã được back-end xác nhận.' : 'VNPay trả về trạng thái thất bại.', result.success ? 'success' : 'error');
+
+        if (window.history?.replaceState) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        logStep('Lỗi khi xử lý callback VNPay', { message, query: window.location.search });
+        setStatus(`Lỗi callback VNPay: ${message}`, 'error');
+      }
+    }
+
+    async function wrapAction(action) {
+      try {
+        await action();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        setStatus(message, 'error');
+        showResponse('Error', { message });
+        logStep('Có lỗi xảy ra', { message });
+      }
+    }
+
+    saveConfigBtn.addEventListener('click', () => {
+      persistConfig();
+      renderState();
+      setStatus('Đã lưu dữ liệu API vào localStorage.', 'success');
+      logStep('Đã lưu cấu hình test', getConfig());
+    });
+
+    previewBackendBtn.addEventListener('click', () => wrapAction(previewBackend));
+    useCurrentPageBtn.addEventListener('click', () => {
+      returnUrlInput.value = getCleanCurrentPageUrl();
+      persistConfig();
+      renderState();
+      setStatus('Đã gán return URL = trang hiện tại.', 'success');
+    });
+    runFullFlowBtn.addEventListener('click', () => wrapAction(runFullFlow));
+    addToCartBtn.addEventListener('click', () => wrapAction(addToCart));
+    getCartBtn.addEventListener('click', () => wrapAction(getCart));
+    createOrderBtn.addEventListener('click', () => wrapAction(createOrder));
+    createPaymentBtn.addEventListener('click', () => wrapAction(createPaymentUrl));
+    openPaymentBtn.addEventListener('click', () => wrapAction(async () => openPaymentPage()));
+    checkPaymentBtn.addEventListener('click', () => wrapAction(checkPaymentStatus));
+    clearLogsBtn.addEventListener('click', clearLogs);
+
+    loadSavedConfig();
+    renderState();
+    handleVnPayReturn();
+  </script>
+</body>
+</html>

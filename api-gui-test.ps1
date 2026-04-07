@@ -1,0 +1,1 @@
+Set-Location "frontend\APITest"; if (Get-Command py -ErrorAction SilentlyContinue) { py -3 -m http.server 3000 } elseif (Get-Command python -ErrorAction SilentlyContinue) { python -m http.server 3000 } else { Write-Error "Python is not installed."; exit 1 }

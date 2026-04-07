@@ -1,0 +1,13 @@
+$kind: http-request
+name: Update Review Status
+method: PUT
+url: '{{baseUrl}}/api/reviews/{{reviewId}}/status'
+order: 7000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+queryParams:
+  - key: status
+    value: APPROVED
