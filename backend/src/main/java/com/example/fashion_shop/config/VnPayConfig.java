@@ -24,6 +24,9 @@ public class VnPayConfig {
     private String notifyUrl;
 
     public boolean isConfigured() {
-        return tmnCode != null && hashSecret != null && returnUrl != null && notifyUrl != null;
+        return tmnCode != null && !tmnCode.isBlank()
+                && hashSecret != null && !hashSecret.isBlank()
+                && returnUrl != null && !returnUrl.isBlank()
+                && notifyUrl != null && !notifyUrl.isBlank();
     }
 }

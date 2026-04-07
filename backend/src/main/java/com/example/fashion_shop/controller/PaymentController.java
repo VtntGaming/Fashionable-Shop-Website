@@ -25,7 +25,7 @@ public class PaymentController {
     @PostMapping("/vnpay/create")
     public ResponseEntity<ApiResponse<PaymentUrlResponse>> createVnPayPayment(
             @RequestParam Long orderId,
-            @RequestParam(required = false, defaultValue = "http://localhost:3000/payment-result") String returnUrl) {
+            @RequestParam(required = false, defaultValue = "") String returnUrl) {
         PaymentUrlResponse result = paymentService.createVnPayPayment(orderId, returnUrl);
         return ResponseEntity.ok(ApiResponse.<PaymentUrlResponse>builder()
                 .success(true)
