@@ -110,7 +110,7 @@ class VnPayUtilTest {
             assertTrue(query.contains("vnp_Amount=5000000"));
             assertTrue(query.contains("vnp_Command=pay"));
             assertTrue(query.contains("vnp_CurrCode=VND"));
-            assertTrue(query.contains("vnp_OrderInfo=Test Order"));
+            assertTrue(query.contains("vnp_OrderInfo=Test+Order"));
             assertEquals(4, query.split("&").length);
         }
 
@@ -161,7 +161,9 @@ class VnPayUtilTest {
 
             String query = VnPayUtil.buildQueryString(params);
 
-            assertTrue(query.contains("vnp_OrderInfo=Thanh"));
+            assertTrue(query.contains("vnp_OrderInfo="));
+            assertTrue(query.contains("ABC-123"));
+            assertTrue(query.contains("vnp_Note="));
         }
 
         @Test

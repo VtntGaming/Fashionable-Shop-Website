@@ -15,8 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
+import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -50,6 +51,9 @@ public class PaymentService {
 
         if (existingPayment.isPresent()) {
             payment = existingPayment.get();
+            payment.setAmount(order.getTotalAmount());
+            payment.setPaymentMethod(Payment.PaymentMethod.VNPAY);
+            payment.setStatus(Payment.PaymentStatus.PENDING);
         } else {
             payment = Payment.builder()
                     .order(order)
@@ -57,11 +61,20 @@ public class PaymentService {
                     .paymentMethod(Payment.PaymentMethod.VNPAY)
                     .status(Payment.PaymentStatus.PENDING)
                     .build();
-            payment = paymentRepository.save(payment);
         }
 
+        String txnRef = order.getOrderCode();
+        String resolvedReturnUrl = resolveReturnUrl(returnBaseUrl);
+
+        payment.setVnpTxnRef(txnRef);
+        payment.setVnpReturnUrl(resolvedReturnUrl);
+        payment = paymentRepository.save(payment);
+
+        order.setVnpTxnRef(txnRef);
+        orderRepository.save(order);
+
         // Generate VNPay payment URL
-        String paymentUrl = generateVnPayUrl(order, payment, returnBaseUrl);
+        String paymentUrl = generateVnPayUrl(order, resolvedReturnUrl);
 
         log.info("VNPay payment URL generated for order: {}", orderId);
         return PaymentUrlResponse.builder()
@@ -185,42 +198,55 @@ public class PaymentService {
     /**
      * Generate VNPay payment URL
      */
-    private String generateVnPayUrl(Order order, Payment payment, String returnBaseUrl) {
+    private String generateVnPayUrl(Order order, String returnBaseUrl) {
         Map<String, String> vnpParams = new TreeMap<>();
-        vnpParams.put("vnp_Version", "2.1.0");
+        vnpParams.put("vnp_Version", "2.1.1");
         vnpParams.put("vnp_Command", "pay");
         vnpParams.put("vnp_TmnCode", vnPayConfig.getTmnCode());
-        vnpParams.put("vnp_Amount", order.getTotalAmount().multiply(new BigDecimal(100)).toPlainString());
+        vnpParams.put("vnp_Amount", VnPayUtil.formatAmount(order.getTotalAmount()));
         vnpParams.put("vnp_CurrCode", "VND");
         vnpParams.put("vnp_TxnRef", order.getOrderCode());
-        vnpParams.put("vnp_OrderInfo", "Thanh toan don hang: " + order.getOrderCode());
+        vnpParams.put("vnp_OrderInfo", "Thanh toan don hang " + order.getOrderCode());
         vnpParams.put("vnp_OrderType", "other");
         vnpParams.put("vnp_Locale", "vn");
         vnpParams.put("vnp_ReturnUrl", returnBaseUrl);
         vnpParams.put("vnp_IpAddr", "127.0.0.1");
-        
-        long createDate = System.currentTimeMillis();
-        vnpParams.put("vnp_CreateDate", String.valueOf(createDate));
 
-        // Build secure hash
-        String data = VnPayUtil.buildQueryString(vnpParams);
-        String secureHash = VnPayUtil.hmacSHA512(data, vnPayConfig.getHashSecret());
+        LocalDateTime now = LocalDateTime.now();
+        String createDate = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String expireDate = now.plusMinutes(15).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        vnpParams.put("vnp_CreateDate", createDate);
+        vnpParams.put("vnp_ExpireDate", expireDate);
+
+        String hashData = VnPayUtil.buildQueryString(vnpParams);
+        String secureHash = VnPayUtil.hmacSHA512(hashData, vnPayConfig.getHashSecret());
         vnpParams.put("vnp_SecureHash", secureHash);
         vnpParams.put("vnp_SecureHashType", "SHA512");
 
-        // Build payment URL
-        StringBuilder url = new StringBuilder(vnPayConfig.getApiUrl());
-        url.append("?");
-        boolean first = true;
-        for (Map.Entry<String, String> entry : vnpParams.entrySet()) {
-            if (!first) {
-                url.append("&");
+        return vnPayConfig.getApiUrl() + "?" + VnPayUtil.buildQueryString(vnpParams);
+    }
+
+    private String resolveReturnUrl(String returnBaseUrl) {
+        String configuredReturnUrl = vnPayConfig.getReturnUrl();
+        String candidate = (returnBaseUrl == null || returnBaseUrl.isBlank())
+                ? configuredReturnUrl
+                : returnBaseUrl.trim();
+
+        try {
+            URI uri = URI.create(candidate);
+            String scheme = uri.getScheme();
+            if (scheme != null && (scheme.equalsIgnoreCase("http") || scheme.equalsIgnoreCase("https"))) {
+                return uri.toASCIIString();
             }
-            url.append(entry.getKey()).append("=").append(entry.getValue());
-            first = false;
+        } catch (IllegalArgumentException ex) {
+            log.warn("Invalid VNPay return URL received, fallback to configured URL: {}", candidate);
         }
 
-        return url.toString();
+        if (configuredReturnUrl != null && !configuredReturnUrl.isBlank()) {
+            return configuredReturnUrl.trim();
+        }
+
+        throw new BadRequestException("VNPay return URL is invalid or not configured");
     }
 
     private PaymentResponse toPaymentResponse(Payment payment) {

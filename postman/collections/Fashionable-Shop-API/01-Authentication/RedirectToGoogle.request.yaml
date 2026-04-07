@@ -1,0 +1,5 @@
+$kind: http-request
+name: RedirectToGoogle
+url: ""
+method: GET
+order: 3646283785962613

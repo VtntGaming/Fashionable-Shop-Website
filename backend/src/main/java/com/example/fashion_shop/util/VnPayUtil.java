@@ -2,8 +2,13 @@ package com.example.fashion_shop.util;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class VnPayUtil {
 
@@ -32,23 +37,26 @@ public class VnPayUtil {
      * Build query string from map
      */
     public static String buildQueryString(Map<String, String> fields) {
-        List<String> fieldNames = new ArrayList<>(fields.keySet());
-        Collections.sort(fieldNames);
-        StringBuilder sb = new StringBuilder();
-        Iterator<String> itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = itr.next();
-            String fieldValue = fields.get(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                sb.append(fieldName);
-                sb.append('=');
-                sb.append(fieldValue);
-                if (itr.hasNext()) {
-                    sb.append('&');
-                }
-            }
-        }
-        return sb.toString();
+        return fields.entrySet().stream()
+                .filter(entry -> entry.getValue() != null && !entry.getValue().isBlank())
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> encode(entry.getKey()) + "=" + encode(entry.getValue()))
+                .collect(Collectors.joining("&"));
+    }
+
+    /**
+     * Format amount for VNPay (minor unit, integer only)
+     */
+    public static String formatAmount(BigDecimal amount) {
+        Objects.requireNonNull(amount, "amount must not be null");
+        return amount.movePointRight(2)
+                .setScale(0, RoundingMode.HALF_UP)
+                .toPlainString();
+    }
+
+    private static String encode(String value) {
+        // VNPay Java integration expects standard URLEncoder behavior, including `+` for spaces.
+        return URLEncoder.encode(value, StandardCharsets.US_ASCII);
     }
 
     /**

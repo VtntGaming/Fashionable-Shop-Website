@@ -186,6 +186,29 @@ class PaymentServiceTest {
 
             assertTrue(response.getPaymentUrl().contains("vnp_Amount=" + "50000000"));
         }
+
+        @Test
+        @DisplayName("Should not send decimal separators in VNPay amount")
+        void shouldNotSendDecimalSeparatorsInVnPayAmount() {
+            testOrder.setTotalAmount(new BigDecimal("500000.00"));
+
+            when(vnPayConfig.isConfigured()).thenReturn(true);
+            when(vnPayConfig.getTmnCode()).thenReturn(TEST_TMN_CODE);
+            when(vnPayConfig.getHashSecret()).thenReturn(TEST_SECRET);
+            when(vnPayConfig.getApiUrl()).thenReturn("https://sandbox.vnpayment.vn/paymentv2/vpcpay.html");
+            when(orderRepository.findById(100L)).thenReturn(Optional.of(testOrder));
+            when(paymentRepository.findByOrderId(100L)).thenReturn(Optional.empty());
+            when(paymentRepository.save(any(Payment.class))).thenAnswer(invocation -> {
+                Payment p = invocation.getArgument(0);
+                p.setId(1L);
+                return p;
+            });
+
+            PaymentUrlResponse response = paymentService.createVnPayPayment(100L, "http://localhost/return");
+
+            assertTrue(response.getPaymentUrl().contains("vnp_Amount=50000000"));
+            assertFalse(response.getPaymentUrl().contains("vnp_Amount=50000000.00"));
+        }
     }
 
     // ==================== Handle VNPay Return Tests ====================
