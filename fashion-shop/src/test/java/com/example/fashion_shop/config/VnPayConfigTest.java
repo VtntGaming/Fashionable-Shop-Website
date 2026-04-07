@@ -114,9 +114,9 @@ class VnPayConfigTest {
         @Test
         @DisplayName("Should return correct hashSecret")
         void shouldReturnCorrectHashSecret() {
-            ReflectionTestUtils.setField(vnPayConfig, "hashSecret", "RXM8F9CLXY5BM7H4NWUA9BHJH5K6KPWL");
+            ReflectionTestUtils.setField(vnPayConfig, "hashSecret", "TEST_HASH_SECRET_32_CHARS_LONG_123");
 
-            assertEquals("RXM8F9CLXY5BM7H4NWUA9BHJH5K6KPWL", vnPayConfig.getHashSecret());
+            assertEquals("TEST_HASH_SECRET_32_CHARS_LONG_123", vnPayConfig.getHashSecret());
         }
 
         @Test
@@ -168,13 +168,13 @@ class VnPayConfigTest {
         @Test
         @DisplayName("Should be configured with sandbox credentials")
         void shouldBeConfiguredWithSandboxCredentials() {
-            setFields("9NIRGDUZ", "RXM8F9CLXY5BM7H4NWUA9BHJH5K6KPWL",
+            setFields("TEST_TMN_CODE", "TEST_HASH_SECRET_32_CHARS_LONG_123",
                     "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
                     "http://localhost:3000/payment-result",
                     "http://localhost:8080/api/payment/vnpay/ipn");
 
             assertTrue(vnPayConfig.isConfigured());
-            assertEquals("9NIRGDUZ", vnPayConfig.getTmnCode());
+            assertEquals("TEST_TMN_CODE", vnPayConfig.getTmnCode());
             assertTrue(vnPayConfig.getApiUrl().contains("sandbox"));
         }
 

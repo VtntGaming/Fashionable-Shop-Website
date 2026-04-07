@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("VnPayUtil - VNPay Utility Tests")
 class VnPayUtilTest {
 
-    private static final String TEST_SECRET = "RXM8F9CLXY5BM7H4NWUA9BHJH5K6KPWL";
-    private static final String SANDBOX_SECRET = "RXM8F9CLXY5BM7H4NWUA9BHJH5K6KPWL";
+    private static final String TEST_SECRET = "TEST_HASH_SECRET_32_CHARS_LONG_123";
+    private static final String SANDBOX_SECRET = "SANDBOX_HASH_SECRET_32_CHARS_456";
 
     // ==================== HMAC SHA512 Tests ====================
 

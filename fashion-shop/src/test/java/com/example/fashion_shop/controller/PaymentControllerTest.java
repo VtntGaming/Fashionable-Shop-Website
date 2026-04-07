@@ -14,16 +14,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -41,20 +45,20 @@ class PaymentControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private PaymentRepository paymentRepository;
 
-    @MockBean
+    @MockitoBean
     private OrderRepository orderRepository;
 
-    @MockBean
+    @MockitoBean
     private VnPayConfig vnPayConfig;
 
     private User testUser;
     private Order testOrder;
     private Payment testPayment;
 
-    private static final String TEST_SECRET = "RXM8F9CLXY5BM7H4NWUA9BHJH5K6KPWL";
+    private static final String TEST_SECRET = "TEST_HASH_SECRET_32_CHARS_LONG_123";
     private static final String TEST_TMN_CODE = "TEST_TMN_CODE";
 
     @BeforeEach
@@ -236,8 +240,11 @@ class PaymentControllerTest {
 
             when(paymentRepository.findByVnpTxnRef("ORD-2026-001")).thenReturn(Optional.of(testPayment));
 
+            MultiValueMap<String, String> multiParams = new LinkedMultiValueMap<>();
+            params.forEach(multiParams::add);
+
             mockMvc.perform(post("/api/payments/vnpay/ipn")
-                            .params(params)
+                            .params(multiParams)
                             .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.RspCode").value("00"))
@@ -252,8 +259,11 @@ class PaymentControllerTest {
             params.put("vnp_ResponseCode", "00");
             params.put("vnp_SecureHash", "invalid_hash");
 
+            MultiValueMap<String, String> multiParams = new LinkedMultiValueMap<>();
+            params.forEach(multiParams::add);
+
             mockMvc.perform(post("/api/payments/vnpay/ipn")
-                            .params(params)
+                            .params(multiParams)
                             .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.RspCode").value("01"))
@@ -273,8 +283,11 @@ class PaymentControllerTest {
 
             when(paymentRepository.findByVnpTxnRef("NONEXISTENT")).thenReturn(Optional.empty());
 
+            MultiValueMap<String, String> multiParams = new LinkedMultiValueMap<>();
+            params.forEach(multiParams::add);
+
             mockMvc.perform(post("/api/payments/vnpay/ipn")
-                            .params(params)
+                            .params(multiParams)
                             .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.RspCode").value("01"));

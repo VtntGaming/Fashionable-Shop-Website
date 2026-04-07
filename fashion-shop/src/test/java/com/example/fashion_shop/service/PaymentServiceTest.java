@@ -51,7 +51,7 @@ class PaymentServiceTest {
     private Order testOrder;
     private Payment testPayment;
 
-    private static final String TEST_SECRET = "RXM8F9CLXY5BM7H4NWUA9BHJH5K6KPWL";
+    private static final String TEST_SECRET = "TEST_HASH_SECRET_32_CHARS_LONG_123";
     private static final String TEST_TMN_CODE = "TEST_TMN_CODE";
 
     @BeforeEach
