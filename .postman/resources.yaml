@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: ab7ac9b3-9d16-48a8-bc9b-e402e9b986f6
+
+localResources:
+  collections:
+    - ..\Fashion_Shop_API.postman_collection.json

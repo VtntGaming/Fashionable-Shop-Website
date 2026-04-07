@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get User Stats
+method: GET
+url: '{{baseUrl}}/api/admin/reports/users'
+order: 4000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'

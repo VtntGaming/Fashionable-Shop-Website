@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Subcategories
+method: GET
+url: '{{baseUrl}}/api/categories/{{parentId}}/children'
+order: 4000

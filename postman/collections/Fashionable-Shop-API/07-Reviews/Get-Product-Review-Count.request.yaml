@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Product Review Count
+method: GET
+url: '{{baseUrl}}/api/reviews/product/{{productId}}/count'
+order: 9000

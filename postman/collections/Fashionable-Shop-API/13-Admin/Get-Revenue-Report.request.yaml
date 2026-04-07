@@ -1,0 +1,15 @@
+$kind: http-request
+name: Get Revenue Report
+method: GET
+url: '{{baseUrl}}/api/admin/reports/revenue'
+order: 2000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+queryParams:
+  - key: startDate
+    value: '2025-01-01'
+  - key: endDate
+    value: '2025-12-31'

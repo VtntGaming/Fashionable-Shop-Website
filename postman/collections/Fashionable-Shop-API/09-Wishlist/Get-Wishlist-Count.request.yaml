@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get Wishlist Count
+method: GET
+url: '{{baseUrl}}/api/wishlists/count'
+order: 6000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'

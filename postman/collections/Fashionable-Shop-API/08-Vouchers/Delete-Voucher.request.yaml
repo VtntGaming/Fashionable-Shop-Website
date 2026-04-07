@@ -1,0 +1,10 @@
+$kind: http-request
+name: Delete Voucher
+method: DELETE
+url: '{{baseUrl}}/api/vouchers/{{voucherId}}'
+order: 6000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'

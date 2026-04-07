@@ -1,0 +1,10 @@
+$kind: http-request
+name: Remove Cart Item
+method: DELETE
+url: '{{baseUrl}}/api/carts/remove/{{cartItemId}}'
+order: 4000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
