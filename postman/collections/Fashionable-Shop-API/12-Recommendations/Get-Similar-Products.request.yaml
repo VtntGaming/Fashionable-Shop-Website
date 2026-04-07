@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Similar Products
+method: GET
+url: '{{baseUrl}}/api/recommendations/similar/{{productId}}'
+order: 3000

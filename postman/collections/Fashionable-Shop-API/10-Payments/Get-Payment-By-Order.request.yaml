@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get Payment By Order
+method: GET
+url: '{{baseUrl}}/api/payments/order/{{orderId}}'
+order: 4000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'

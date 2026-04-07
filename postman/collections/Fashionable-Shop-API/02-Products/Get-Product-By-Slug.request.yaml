@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Product By Slug
+method: GET
+url: '{{baseUrl}}/api/products/slug/{{productSlug}}'
+order: 3000

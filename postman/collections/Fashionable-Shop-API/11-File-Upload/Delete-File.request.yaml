@@ -1,0 +1,13 @@
+$kind: http-request
+name: Delete File
+method: DELETE
+url: '{{baseUrl}}/api/files'
+order: 4000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+queryParams:
+  - key: fileUrl
+    value: '{{fileUrl}}'

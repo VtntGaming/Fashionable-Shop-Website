@@ -1,0 +1,10 @@
+$kind: http-request
+name: Validate Voucher
+method: POST
+url: '{{baseUrl}}/api/vouchers/validate'
+order: 3000
+queryParams:
+  - key: code
+    value: SAVE10
+  - key: orderAmount
+    value: '100.00'

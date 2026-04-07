@@ -1,0 +1,15 @@
+$kind: http-request
+name: Get All Vouchers Admin
+method: GET
+url: '{{baseUrl}}/api/vouchers/admin/all'
+order: 7000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+queryParams:
+  - key: page
+    value: '0'
+  - key: size
+    value: '10'

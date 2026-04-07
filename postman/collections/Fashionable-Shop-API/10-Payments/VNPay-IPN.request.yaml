@@ -1,0 +1,10 @@
+$kind: http-request
+name: VNPay IPN
+method: POST
+url: '{{baseUrl}}/api/payments/vnpay/ipn'
+order: 3000
+queryParams:
+  - key: vnp_TxnRef
+    value: '{{vnp_TxnRef}}'
+  - key: vnp_ResponseCode
+    value: '00'

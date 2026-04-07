@@ -1,0 +1,13 @@
+$kind: http-request
+name: Update User Status
+method: PUT
+url: '{{baseUrl}}/api/users/{{userId}}/status'
+order: 5000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+queryParams:
+  - key: status
+    value: ACTIVE

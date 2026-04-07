@@ -1,0 +1,12 @@
+$kind: http-request
+name: Search Products
+method: GET
+url: '{{baseUrl}}/api/products/search'
+order: 4000
+queryParams:
+  - key: keyword
+    value: shirt
+  - key: page
+    value: '0'
+  - key: size
+    value: '10'

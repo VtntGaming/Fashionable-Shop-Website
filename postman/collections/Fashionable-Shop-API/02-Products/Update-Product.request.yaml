@@ -1,0 +1,28 @@
+$kind: http-request
+name: Update Product
+method: PUT
+url: '{{baseUrl}}/api/products/{{productId}}'
+order: 7000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Updated T-Shirt",
+      "slug": "updated-t-shirt",
+      "description": "Updated description",
+      "price": 34.99,
+      "salePrice": 29.99,
+      "stock": 80,
+      "categoryId": 1,
+      "brand": "FashionBrand",
+      "imageUrl": "https://example.com/image.jpg",
+      "additionalImages": []
+    }

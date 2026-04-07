@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Category By Slug
+method: GET
+url: '{{baseUrl}}/api/categories/slug/{{categorySlug}}'
+order: 3000

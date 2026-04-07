@@ -1,0 +1,78 @@
+name: Fashionable Shop
+values:
+  - key: baseUrl
+    value: 'http://localhost:8080'
+    enabled: true
+    type: default
+  - key: authToken
+    value: ''
+    enabled: true
+    type: default
+  - key: refreshToken
+    value: ''
+    enabled: true
+    type: default
+  - key: resetToken
+    value: ''
+    enabled: true
+    type: default
+  - key: googleIdToken
+    value: ''
+    enabled: true
+    type: default
+  - key: productId
+    value: '1'
+    enabled: true
+    type: default
+  - key: productSlug
+    value: classic-t-shirt
+    enabled: true
+    type: default
+  - key: categoryId
+    value: '1'
+    enabled: true
+    type: default
+  - key: categorySlug
+    value: mens-clothing
+    enabled: true
+    type: default
+  - key: parentId
+    value: '1'
+    enabled: true
+    type: default
+  - key: userId
+    value: '1'
+    enabled: true
+    type: default
+  - key: cartItemId
+    value: '1'
+    enabled: true
+    type: default
+  - key: orderId
+    value: '1'
+    enabled: true
+    type: default
+  - key: orderCode
+    value: ORD-001
+    enabled: true
+    type: default
+  - key: reviewId
+    value: '1'
+    enabled: true
+    type: default
+  - key: voucherCode
+    value: SAVE10
+    enabled: true
+    type: default
+  - key: voucherId
+    value: '1'
+    enabled: true
+    type: default
+  - key: vnp_TxnRef
+    value: ''
+    enabled: true
+    type: default
+  - key: fileUrl
+    value: ''
+    enabled: true
+    type: default
