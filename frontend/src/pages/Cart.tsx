@@ -13,14 +13,15 @@ export default function Cart() {
   const { items, totalAmount, itemCount, isLoading } = useSelector((s: RootState) => s.cart);
   const { fetchCart, updateQuantity, removeItem, clearCart } = useCart();
   const navigate = useNavigate();
+  const safeItems = Array.isArray(items) ? items : [];
 
   useEffect(() => { fetchCart(); }, []);
 
   if (isLoading) return <LoadingSpinner />;
 
-  if (items.length === 0) {
+  if (safeItems.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-16">
         <EmptyState
           icon={<ShoppingBag size={48} />}
           title="Giỏ hàng trống"
@@ -33,13 +34,13 @@ export default function Cart() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">Giỏ hàng ({itemCount} sản phẩm)</h1>
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Cart items */}
         <div className="lg:col-span-2 space-y-4">
-          {items.map((item) => (
+          {safeItems.map((item) => (
             <div key={item.id} className="bg-white border border-gray-200 rounded-xl p-4 flex gap-4 hover:shadow-sm transition-shadow">
               <Link to={`/product/${item.productId}`} className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
                 <ImageWithFallback src={item.productImage} alt={item.productName} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />

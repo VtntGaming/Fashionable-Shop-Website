@@ -15,8 +15,8 @@ export default function Vouchers() {
 
   useEffect(() => {
     voucherApi.getActiveVouchers()
-      .then(setVouchers)
-      .catch(() => {})
+      .then((data) => setVouchers(Array.isArray(data) ? data : []))
+      .catch(() => setVouchers([]))
       .finally(() => setLoading(false));
   }, []);
 
@@ -30,7 +30,7 @@ export default function Vouchers() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">Mã giảm giá</h1>
 
       {vouchers.length === 0 ? (

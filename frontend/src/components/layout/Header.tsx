@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ShoppingCart, Heart, User, Menu, X, Search, LogOut, Settings, Package, ChevronDown } from 'lucide-react';
@@ -11,11 +11,18 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, user } = useSelector((s: RootState) => s.auth);
   const { itemCount } = useSelector((s: RootState) => s.cart);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -34,8 +41,8 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4">
+    <header className={`bg-white/95 backdrop-blur-md border-b sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'border-gray-200 shadow-[0_2px_20px_rgba(0,0,0,0.06)]' : 'border-transparent'}`}>
+      <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
@@ -44,15 +51,21 @@ export default function Header() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link to="/" className={`text-sm font-medium transition-colors ${location.pathname === '/' ? 'text-accent' : 'hover:text-accent'}`}>Trang chủ</Link>
-            <Link to="/shop" className={`text-sm font-medium transition-colors ${location.pathname.startsWith('/shop') || location.pathname.startsWith('/product') ? 'text-accent' : 'hover:text-accent'}`}>Cửa hàng</Link>
-            <Link to="/vouchers" className={`text-sm font-medium transition-colors ${location.pathname === '/vouchers' ? 'text-accent' : 'hover:text-accent'}`}>Khuyến mãi</Link>
+          <nav className="hidden md:flex items-center gap-1">
+            {[
+              { to: '/', label: 'Trang chủ', active: location.pathname === '/' },
+              { to: '/shop', label: 'Cửa hàng', active: location.pathname.startsWith('/shop') || location.pathname.startsWith('/product') },
+              { to: '/vouchers', label: 'Khuyến mãi', active: location.pathname === '/vouchers' },
+            ].map((item) => (
+              <Link key={item.to} to={item.to} className={`relative text-sm font-medium px-4 py-2 rounded-full transition-all duration-200 ${item.active ? 'text-accent bg-accent/8' : 'text-gray-600 hover:text-primary hover:bg-gray-100'}`}>
+                {item.label}
+              </Link>
+            ))}
           </nav>
 
           {/* Search */}
-          <form onSubmit={handleSearch} className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 w-64 lg:w-80">
-            <Search size={18} className="text-gray-400" />
+          <form onSubmit={handleSearch} className="hidden md:flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2 flex-1 max-w-xs lg:max-w-sm xl:max-w-md focus-within:border-accent/40 focus-within:bg-white transition-all duration-200">
+            <Search size={16} className="text-gray-400 flex-shrink-0" />
             <input
               type="text"
               placeholder="Tìm kiếm sản phẩm..."
@@ -92,7 +105,7 @@ export default function Header() {
                 {userMenuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
-                    <div className="absolute right-0 top-full mt-1 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-[fadeInUp_0.15s_ease-out]">
                       <div className="px-4 py-2 border-b border-gray-100">
                         <p className="text-sm font-semibold truncate">{user?.fullName}</p>
                         <p className="text-xs text-gray-500 truncate">{user?.email}</p>

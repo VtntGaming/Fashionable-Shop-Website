@@ -3,9 +3,9 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-primary text-white mt-auto">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="bg-gradient-to-b from-primary to-[#111128] text-white mt-auto">
+      <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto pt-14 pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl font-bold">Fashion</span>

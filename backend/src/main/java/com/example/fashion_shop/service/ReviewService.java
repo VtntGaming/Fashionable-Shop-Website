@@ -93,6 +93,25 @@ public class ReviewService {
     }
 
     /**
+     * Get all reviews (Admin)
+     */
+    @Transactional(readOnly = true)
+    public Page<ReviewResponse> getAllReviews(String status, Pageable pageable) {
+        if (status != null && !status.isBlank()) {
+            try {
+                Review.ReviewStatus reviewStatus = Review.ReviewStatus.valueOf(status.toUpperCase());
+                return reviewRepository.findByStatus(reviewStatus, pageable)
+                        .map(this::toReviewResponse);
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException("Invalid status value");
+            }
+        }
+
+        return reviewRepository.findAll(pageable)
+                .map(this::toReviewResponse);
+    }
+
+    /**
      * Update review
      */
     public ReviewResponse updateReview(Long reviewId, Long userId, ReviewUpdateRequest request) {
@@ -176,6 +195,7 @@ public class ReviewService {
         return ReviewResponse.builder()
                 .id(review.getId())
                 .productId(product != null ? product.getId() : null)
+                .productName(product != null ? product.getName() : null)
                 .userId(user != null ? user.getId() : null)
                 .userName(user != null ? user.getFullName() : "Anonymous")
                 .rating(review.getRating())

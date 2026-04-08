@@ -33,7 +33,7 @@ export default function OAuthSuccess() {
   }, [searchParams, navigate, dispatch]);
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center">
+    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center">
       <div className="text-center">
         <LoadingSpinner />
         <p className="text-gray-500 mt-4">Đang đăng nhập...</p>

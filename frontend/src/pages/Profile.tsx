@@ -86,7 +86,7 @@ export default function Profile() {
   if (!user) return null;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="w-[90%] max-w-3xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">Tài khoản của tôi</h1>
 
       {/* Avatar */}

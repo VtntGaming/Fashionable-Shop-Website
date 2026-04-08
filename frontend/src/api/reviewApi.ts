@@ -12,8 +12,8 @@ export const reviewApi = {
   getProductReviewCount: (productId: number) =>
     axiosInstance.get<number>(`/reviews/product/${productId}/count`).then((r) => r.data),
 
-  getMyReviews: () =>
-    axiosInstance.get<Review[]>('/reviews/my-reviews').then((r) => r.data),
+  getMyReviews: (params?: { page?: number; size?: number }) =>
+    axiosInstance.get<PaginatedResponse<Review>>('/reviews/my-reviews', { params }).then((r) => Array.isArray(r.data?.content) ? r.data.content : []),
 
   createReview: (data: CreateReviewRequest) =>
     axiosInstance.post<Review>('/reviews', data).then((r) => r.data),

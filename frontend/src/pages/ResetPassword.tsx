@@ -43,7 +43,7 @@ export default function ResetPassword() {
 
   if (!token) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center">
+      <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-bold mb-2">Liên kết không hợp lệ</h2>
           <p className="text-gray-500 text-sm mb-4">Vui lòng yêu cầu đặt lại mật khẩu mới.</p>
@@ -54,7 +54,7 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
+    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Đặt lại mật khẩu</h1>
