@@ -9,6 +9,9 @@ import { updateProfile } from '@/store/authSlice';
 import { userApi } from '@/api/userApi';
 import { fileApi } from '@/api/fileApi';
 import { ImageWithFallback } from '@/components/ui/ImageWithFallback';
+import Container from '@/components/ui/Container';
+import PageHeader from '@/components/common/PageHeader';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import toast from 'react-hot-toast';
 
 const profileSchema = z.object({
@@ -36,6 +39,7 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [showPasswords, setShowPasswords] = useState(false);
   const [uploading, setUploading] = useState(false);
+  usePageTitle('Tài khoản');
 
   const { register: rp, handleSubmit: hsp, formState: { errors: ep }, reset: resetProfile } = useForm<ProfileForm>({
     resolver: zodResolver(profileSchema),
@@ -86,8 +90,11 @@ export default function Profile() {
   if (!user) return null;
 
   return (
-    <div className="w-[90%] max-w-3xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Tài khoản của tôi</h1>
+    <Container narrow className="page-padding">
+      <PageHeader
+        title="Tài khoản của tôi"
+        breadcrumbs={[{ label: 'Trang chủ', to: '/' }, { label: 'Tài khoản' }]}
+      />
 
       {/* Avatar */}
       <div className="flex items-center gap-4 mb-8">
@@ -111,7 +118,7 @@ export default function Profile() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-gray-200 mb-6">
+      <div className="flex gap-1 border-b border-border mb-6">
         <button
           onClick={() => setTab('profile')}
           className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'profile' ? 'border-accent text-accent' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
@@ -131,8 +138,8 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-medium mb-1.5">Họ và tên</label>
             <div className="relative">
-              <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input {...rp('fullName')} className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent" />
+              <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <input {...rp('fullName')} className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm outline-none focus:border-accent" />
             </div>
             {ep.fullName && <p className="text-red-500 text-xs mt-1">{ep.fullName.message}</p>}
           </div>
@@ -140,24 +147,24 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-medium mb-1.5">Email</label>
             <div className="relative">
-              <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input value={user.email} disabled className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 text-gray-500" />
+              <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <input value={user.email} disabled className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm bg-surface-alt text-text-muted" />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1.5">Số điện thoại</label>
             <div className="relative">
-              <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input {...rp('phone')} type="tel" className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent" />
+              <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <input {...rp('phone')} type="tel" className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm outline-none focus:border-accent" />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1.5">Địa chỉ</label>
             <div className="relative">
-              <MapPin size={16} className="absolute left-3 top-3 text-gray-400" />
-              <textarea {...rp('address')} rows={2} className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent resize-none" />
+              <MapPin size={16} className="absolute left-3 top-3 text-text-muted" />
+              <textarea {...rp('address')} rows={2} className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm outline-none focus:border-accent resize-none" />
             </div>
           </div>
 
@@ -170,9 +177,9 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-medium mb-1.5">Mật khẩu hiện tại</label>
             <div className="relative">
-              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input {...rpw('currentPassword')} type={showPasswords ? 'text' : 'password'} className="w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent" />
-              <button type="button" onClick={() => setShowPasswords(!showPasswords)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <input {...rpw('currentPassword')} type={showPasswords ? 'text' : 'password'} className="w-full pl-10 pr-10 py-2.5 border border-border rounded-lg text-sm outline-none focus:border-accent" />
+              <button type="button" onClick={() => setShowPasswords(!showPasswords)} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">
                 {showPasswords ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
@@ -182,8 +189,8 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-medium mb-1.5">Mật khẩu mới</label>
             <div className="relative">
-              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input {...rpw('newPassword')} type={showPasswords ? 'text' : 'password'} className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent" />
+              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <input {...rpw('newPassword')} type={showPasswords ? 'text' : 'password'} className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm outline-none focus:border-accent" />
             </div>
             {epw.newPassword && <p className="text-red-500 text-xs mt-1">{epw.newPassword.message}</p>}
           </div>
@@ -191,8 +198,8 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-medium mb-1.5">Xác nhận mật khẩu mới</label>
             <div className="relative">
-              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input {...rpw('confirmPassword')} type={showPasswords ? 'text' : 'password'} className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent" />
+              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <input {...rpw('confirmPassword')} type={showPasswords ? 'text' : 'password'} className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm outline-none focus:border-accent" />
             </div>
             {epw.confirmPassword && <p className="text-red-500 text-xs mt-1">{epw.confirmPassword.message}</p>}
           </div>
@@ -202,6 +209,6 @@ export default function Profile() {
           </button>
         </form>
       )}
-    </div>
+    </Container>
   );
 }

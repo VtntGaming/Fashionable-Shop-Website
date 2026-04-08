@@ -7,12 +7,16 @@ import type { Product, ProductFilter } from '@/types/product';
 import type { Category } from '@/types/category';
 import ProductCard from '@/components/product/ProductCard';
 import Pagination from '@/components/common/Pagination';
+import PageHeader from '@/components/common/PageHeader';
 import EmptyState from '@/components/common/EmptyState';
 import { SkeletonGrid } from '@/components/ui/LoadingSpinner';
+import Container from '@/components/ui/Container';
 import { useCart } from '@/hooks/useCart';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store';
 import { formatCurrency } from '@/utils/formatCurrency';
+import { toArray, dedupeBy } from '@/utils/arrayHelpers';
 
 const SORT_OPTIONS = [
   { value: '', label: 'Mặc định' },
@@ -21,24 +25,6 @@ const SORT_OPTIONS = [
   { value: 'createdAt-desc', label: 'Mới nhất' },
   { value: 'averageRating-desc', label: 'Đánh giá cao' },
 ];
-
-function toArray<T>(value: T[] | { content?: T[] } | null | undefined): T[] {
-  if (Array.isArray(value)) return value;
-  if (value && Array.isArray((value as { content?: T[] }).content)) {
-    return (value as { content?: T[] }).content ?? [];
-  }
-  return [];
-}
-
-function dedupeBy<T>(items: T[], getKey: (item: T, index: number) => string | number | undefined) {
-  const seen = new Set<string | number>();
-  return items.filter((item, index) => {
-    const key = getKey(item, index) ?? `fallback-${index}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
 
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -52,6 +38,7 @@ export default function Shop() {
   const [priceExpanded, setPriceExpanded] = useState(true);
   const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
   const { addToCart } = useCart();
+  usePageTitle('Cửa hàng');
 
   const page = parseInt(searchParams.get('page') || '0');
   const categoryId = searchParams.get('categoryId') || '';
@@ -112,35 +99,36 @@ export default function Shop() {
   const selectedCategory = categories.find((c) => String(c.id) === categoryId);
 
   return (
-    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Cửa hàng</h1>
-          <p className="text-sm text-gray-500">{totalElements} sản phẩm</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <select
-            value={sort}
-            onChange={(e) => updateParams({ sort: e.target.value })}
-            className="text-sm border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-accent"
-          >
-            {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-          <button
-            onClick={() => setFilterOpen(!filterOpen)}
-            className="flex items-center gap-2 text-sm border border-gray-200 rounded-lg px-3 py-2 hover:bg-gray-50 lg:hidden relative"
-          >
-            <SlidersHorizontal size={16} /> Lọc
-            {activeFilterCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-accent text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
-        </div>
-      </div>
+    <Container className="page-padding">
+      <PageHeader
+        title="Cửa hàng"
+        subtitle={`${totalElements} sản phẩm`}
+        breadcrumbs={[{ label: 'Trang chủ', to: '/' }, { label: 'Cửa hàng' }]}
+        actions={
+          <>
+            <select
+              value={sort}
+              onChange={(e) => updateParams({ sort: e.target.value })}
+              className="text-sm border border-border rounded-lg px-3 py-2 outline-none focus:border-accent"
+            >
+              {SORT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+            <button
+              onClick={() => setFilterOpen(!filterOpen)}
+              className="flex items-center gap-2 text-sm border border-border rounded-lg px-3 py-2 hover:bg-surface-alt lg:hidden relative"
+            >
+              <SlidersHorizontal size={16} /> Lọc
+              {activeFilterCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-accent text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          </>
+        }
+      />
 
       {/* Active filter chips */}
       {hasActiveFilters && (
@@ -271,6 +259,6 @@ export default function Shop() {
           )}
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

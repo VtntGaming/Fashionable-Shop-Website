@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Mail, ArrowLeft } from 'lucide-react';
 import { authApi } from '@/api/authApi';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import toast from 'react-hot-toast';
 
 const schema = z.object({ email: z.string().email('Email không hợp lệ') });
@@ -13,6 +14,7 @@ type FormData = z.infer<typeof schema>;
 export default function ForgotPassword() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  usePageTitle('Quên mật khẩu');
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -37,7 +39,7 @@ export default function ForgotPassword() {
           <p className="text-gray-500 text-sm">Nhập email để nhận liên kết đặt lại mật khẩu</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div className="card p-6">
           {sent ? (
             <div className="text-center py-4">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -52,12 +54,12 @@ export default function ForgotPassword() {
               <div>
                 <label className="block text-sm font-medium mb-1.5">Email</label>
                 <div className="relative">
-                  <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
                     {...register('email')}
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent"
+                    className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm outline-none focus:border-accent"
                   />
                 </div>
                 {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}

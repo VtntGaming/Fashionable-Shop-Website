@@ -66,20 +66,40 @@
 
 @theme {
   --font-sans: 'Lexend', system-ui, sans-serif;
+  /* Brand palette */
   --color-primary: #1a1a2e;
   --color-primary-light: #16213e;
   --color-accent: #c9a84c;
   --color-accent-light: #d4b968;
   --color-accent-dark: #b8943f;
+  /* Surfaces */
   --color-surface: #ffffff;
   --color-surface-alt: #f8f9fa;
+  --color-surface-raised: #ffffff;
+  /* Border & dividers */
   --color-border: #e5e7eb;
+  --color-border-light: #f3f4f6;
+  /* Text */
   --color-text: #1f2937;
   --color-text-light: #6b7280;
+  --color-text-muted: #9ca3af;
+  /* Semantic */
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
   --color-info: #3b82f6;
+  /* Shadows as design tokens */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 10px 30px rgba(0,0,0,0.08);
+  --shadow-dropdown: 0 10px 40px rgba(0,0,0,0.12);
+  /* Radius tokens */
+  --radius-base: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-full: 9999px;
+  /* Spacing for page sections */
+  --section-y: 3.5rem;
+  --page-y: 2rem;
 }
 
 * {
@@ -198,6 +218,73 @@ header.scrolled {
   .responsive-container {
     max-width: 90rem; /* 1440px on 2xl screens */
   }
+}
+
+/* Consistent section padding */
+.section-padding {
+  padding-top: var(--section-y);
+  padding-bottom: var(--section-y);
+}
+
+.page-padding {
+  padding-top: var(--page-y);
+  padding-bottom: var(--page-y);
+}
+
+/* Card base */
+.card {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+
+.card-hover:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Button base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: var(--radius-base);
+  padding: 0.625rem 1.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+.btn-primary:hover {
+  background-color: var(--color-primary-light);
+}
+
+.btn-accent {
+  background-color: var(--color-accent);
+  color: white;
+}
+.btn-accent:hover {
+  background-color: var(--color-accent-light);
+}
+
+.btn-outline {
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+}
+.btn-outline:hover {
+  background-color: var(--color-surface-alt);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Fluid typography scaling */

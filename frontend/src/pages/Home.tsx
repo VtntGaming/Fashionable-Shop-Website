@@ -12,28 +12,14 @@ import type { Category } from '@/types/category';
 import type { Voucher } from '@/types/voucher';
 import ProductCard from '@/components/product/ProductCard';
 import { SkeletonGrid } from '@/components/ui/LoadingSpinner';
+import Container from '@/components/ui/Container';
+import SectionHeader from '@/components/common/SectionHeader';
 import { useCart } from '@/hooks/useCart';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { ImageWithFallback } from '@/components/ui/ImageWithFallback';
+import { toArray, dedupeBy } from '@/utils/arrayHelpers';
 import toast from 'react-hot-toast';
-
-function toArray<T>(value: T[] | { content?: T[] } | null | undefined): T[] {
-  if (Array.isArray(value)) return value;
-  if (value && Array.isArray((value as { content?: T[] }).content)) {
-    return (value as { content?: T[] }).content ?? [];
-  }
-  return [];
-}
-
-function dedupeBy<T>(items: T[], getKey: (item: T, index: number) => string | number | undefined) {
-  const seen = new Set<string | number>();
-  return items.filter((item, index) => {
-    const key = getKey(item, index) ?? `fallback-${index}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
 
 export default function Home() {
   const [featured, setFeatured] = useState<Product[]>([]);
@@ -43,6 +29,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
   const { addToCart } = useCart();
+  usePageTitle();
 
   useEffect(() => {
     async function fetchData() {
@@ -79,7 +66,7 @@ export default function Home() {
     <div>
       {/* Hero Banner */}
       <section className="relative bg-gradient-to-br from-primary via-primary-light to-primary text-white overflow-hidden">
-        <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-16 md:py-24 lg:py-28 relative z-10">
+        <Container className="py-16 md:py-24 lg:py-28 relative z-10">
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left: Content */}
             <div>
@@ -135,7 +122,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </Container>
         {/* Background blobs */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute top-[5%] right-[10%] w-[25vw] max-w-[20rem] aspect-square rounded-full bg-accent blur-[100px]" />
@@ -146,16 +133,9 @@ export default function Home() {
 
       {/* Categories */}
       {Array.isArray(categories) && categories.length > 0 && (
-        <section className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-14">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-2xl font-bold">Danh mục sản phẩm</h2>
-              <p className="text-sm text-gray-500 mt-1">Khám phá theo phong cách của bạn</p>
-            </div>
-            <Link to="/shop" className="text-sm text-accent font-medium hover:underline flex items-center gap-1">
-              Xem tất cả <ArrowRight size={14} />
-            </Link>
-          </div>
+        <section className="section-padding">
+          <Container>
+          <SectionHeader title="Danh mục sản phẩm" subtitle="Khám phá theo phong cách của bạn" actionLabel="Xem tất cả" actionLink="/shop" />
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
             {categories.slice(0, 6).map((cat, index) => {
               const gradients = [
@@ -189,24 +169,14 @@ export default function Home() {
               );
             })}
           </div>
+          </Container>
         </section>
       )}
 
       {/* Featured Products */}
-      <section className="bg-white py-14">
-        <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Sparkles size={22} className="text-accent" />
-                <h2 className="text-2xl font-bold">Sản phẩm nổi bật</h2>
-              </div>
-              <p className="text-sm text-gray-500">Được yêu thích nhất tuần này</p>
-            </div>
-            <Link to="/shop" className="text-sm bg-accent/10 text-accent font-medium px-4 py-2 rounded-full hover:bg-accent/20 flex items-center gap-1 transition-colors">
-              Xem thêm <ArrowRight size={14} />
-            </Link>
-          </div>
+      <section className="bg-white section-padding">
+        <Container>
+          <SectionHeader icon={<Sparkles size={22} className="text-accent" />} title="Sản phẩm nổi bật" subtitle="Được yêu thích nhất tuần này" actionLabel="Xem thêm" actionLink="/shop" />
           {loading ? (
             <SkeletonGrid count={8} />
           ) : (
@@ -216,36 +186,25 @@ export default function Home() {
               ))}
             </div>
           )}
-        </div>
+        </Container>
       </section>
 
       {/* Trending */}
       {Array.isArray(trending) && trending.length > 0 && (
-        <section className="bg-gradient-to-b from-gray-50 to-white py-14">
-            <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <TrendingUp size={22} className="text-accent" />
-                  <h2 className="text-2xl font-bold">Xu hướng</h2>
-                </div>
-                <p className="text-sm text-gray-500">Sản phẩm đang hot nhất</p>
-              </div>
-              <Link to="/shop" className="text-sm bg-accent/10 text-accent font-medium px-4 py-2 rounded-full hover:bg-accent/20 flex items-center gap-1 transition-colors">
-                Xem thêm <ArrowRight size={14} />
-              </Link>
-            </div>
+        <section className="bg-gradient-to-b from-gray-50 to-white section-padding">
+            <Container>
+            <SectionHeader icon={<TrendingUp size={22} className="text-accent" />} title="Xu hướng" subtitle="Sản phẩm đang hot nhất" actionLabel="Xem thêm" actionLink="/shop" />
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {trending.map((p, index) => (
                 <ProductCard key={`trending-${p.id ?? p.slug ?? index}`} product={p} onAddToCart={isAuthenticated ? addToCart : undefined} />
               ))}
             </div>
-          </div>
+          </Container>
         </section>
       )}
 
       {/* CTA Banner */}
-      <section className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-14">
+      <Container className="section-padding">
         <div className="relative bg-gradient-to-r from-primary via-primary-light to-primary rounded-3xl overflow-hidden px-6 sm:px-8 py-10 sm:py-12 md:py-16 md:px-14">
           <div className="relative z-10 max-w-lg">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Đăng ký nhận ưu đãi</h2>
@@ -264,24 +223,13 @@ export default function Home() {
             <div className="absolute bottom-0 left-1/3 w-[15vw] max-w-[12rem] aspect-square rounded-full bg-white blur-[60px]" />
           </div>
         </div>
-      </section>
+      </Container>
 
       {/* Vouchers */}
       {Array.isArray(vouchers) && vouchers.length > 0 && (
-        <section className="bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 py-14">
-            <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <Tag size={22} className="text-accent" />
-                  <h2 className="text-2xl font-bold">Ưu đãi hôm nay</h2>
-                </div>
-                <p className="text-sm text-gray-500">Nhập mã để được giảm giá ngay</p>
-              </div>
-              <Link to="/vouchers" className="text-sm bg-accent/10 text-accent font-medium px-4 py-2 rounded-full hover:bg-accent/20 flex items-center gap-1 transition-colors">
-                Tất cả voucher <ArrowRight size={14} />
-              </Link>
-            </div>
+        <section className="bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 section-padding">
+            <Container>
+            <SectionHeader icon={<Tag size={22} className="text-accent" />} title="Ưu đãi hôm nay" subtitle="Nhập mã để được giảm giá ngay" actionLabel="Tất cả voucher" actionLink="/vouchers" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {vouchers.map((v, index) => (
                 <div key={`voucher-${v.id ?? v.code ?? index}`} className="relative bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
@@ -304,7 +252,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-          </div>
+          </Container>
         </section>
       )}
     </div>

@@ -14,7 +14,7 @@ export default function NotFound() {
         <div className="flex items-center justify-center gap-3">
           <button
             onClick={() => window.history.back()}
-            className="inline-flex items-center gap-2 border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+            className="inline-flex items-center gap-2 border border-border text-gray-700 px-5 py-2.5 rounded-xl font-medium hover:bg-surface-alt transition-colors"
           >
             <ArrowLeft size={16} /> Quay lại
           </button>

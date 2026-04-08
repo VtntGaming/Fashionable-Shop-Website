@@ -5,6 +5,7 @@ import { ShoppingCart, Heart, User, Menu, X, Search, LogOut, Settings, Package, 
 import type { RootState, AppDispatch } from '@/store';
 import { logout } from '@/store/authSlice';
 import { clearCartState } from '@/store/cartSlice';
+import Container from '@/components/ui/Container';
 import toast from 'react-hot-toast';
 
 export default function Header() {
@@ -41,8 +42,8 @@ export default function Header() {
   };
 
   return (
-    <header className={`bg-white/95 backdrop-blur-md border-b sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'border-gray-200 shadow-[0_2px_20px_rgba(0,0,0,0.06)]' : 'border-transparent'}`}>
-      <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto">
+    <header className={`bg-white/95 backdrop-blur-md border-b sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'border-border shadow-card' : 'border-transparent'}`}>
+      <Container>
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
@@ -64,8 +65,8 @@ export default function Header() {
           </nav>
 
           {/* Search */}
-          <form onSubmit={handleSearch} className="hidden md:flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2 flex-1 max-w-xs lg:max-w-sm xl:max-w-md focus-within:border-accent/40 focus-within:bg-white transition-all duration-200">
-            <Search size={16} className="text-gray-400 flex-shrink-0" />
+          <form onSubmit={handleSearch} className="hidden md:flex items-center bg-surface-alt border border-border rounded-full px-4 py-2 flex-1 max-w-xs lg:max-w-sm xl:max-w-md focus-within:border-accent/40 focus-within:bg-white transition-all duration-200">
+            <Search size={16} className="text-text-muted flex-shrink-0" />
             <input
               type="text"
               placeholder="Tìm kiếm sản phẩm..."
@@ -105,24 +106,24 @@ export default function Header() {
                 {userMenuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-[fadeInUp_0.15s_ease-out]">
-                      <div className="px-4 py-2 border-b border-gray-100">
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-dropdown border border-border-light py-2 z-50 animate-[fadeInUp_0.15s_ease-out]">
+                      <div className="px-4 py-2 border-b border-border-light">
                         <p className="text-sm font-semibold truncate">{user?.fullName}</p>
                         <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                       </div>
-                      <Link to="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors">
+                      <Link to="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-surface-alt transition-colors">
                         <Settings size={16} /> Tài khoản
                       </Link>
-                      <Link to="/orders" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors">
+                      <Link to="/orders" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-surface-alt transition-colors">
                         <Package size={16} /> Đơn hàng
                       </Link>
                       {user?.role === 'ADMIN' && (
-                        <Link to="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors text-accent font-medium">
+                        <Link to="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-surface-alt transition-colors text-accent font-medium">
                           <Settings size={16} /> Quản trị
                         </Link>
                       )}
-                      <hr className="my-1 border-gray-100" />
-                      <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors text-red-600 w-full">
+                      <hr className="my-1 border-border-light" />
+                      <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-surface-alt transition-colors text-red-600 w-full">
                         <LogOut size={16} /> Đăng xuất
                       </button>
                     </div>
@@ -145,9 +146,9 @@ export default function Header() {
 
         {/* Mobile Search */}
         {menuOpen && (
-          <div className="md:hidden pb-4 border-t border-gray-100 pt-3">
-            <form onSubmit={handleSearch} className="flex items-center bg-gray-100 rounded-full px-4 py-2 mb-3">
-              <Search size={18} className="text-gray-400" />
+          <div className="md:hidden pb-4 border-t border-border-light pt-3">
+            <form onSubmit={handleSearch} className="flex items-center bg-surface-alt rounded-full px-4 py-2 mb-3">
+              <Search size={18} className="text-text-muted" />
               <input
                 type="text"
                 placeholder="Tìm kiếm sản phẩm..."
@@ -158,12 +159,12 @@ export default function Header() {
             </form>
             <nav className="flex flex-col gap-1">
               <Link to="/" onClick={() => setMenuOpen(false)} className="px-3 py-2 text-sm font-medium hover:bg-gray-50 rounded-lg">Trang chủ</Link>
-              <Link to="/shop" onClick={() => setMenuOpen(false)} className="px-3 py-2 text-sm font-medium hover:bg-gray-50 rounded-lg">Cửa hàng</Link>
-              <Link to="/vouchers" onClick={() => setMenuOpen(false)} className="px-3 py-2 text-sm font-medium hover:bg-gray-50 rounded-lg">Khuyến mãi</Link>
+              <Link to="/shop" onClick={() => setMenuOpen(false)} className="px-3 py-2 text-sm font-medium hover:bg-surface-alt rounded-lg">Cửa hàng</Link>
+              <Link to="/vouchers" onClick={() => setMenuOpen(false)} className="px-3 py-2 text-sm font-medium hover:bg-surface-alt rounded-lg">Khuyến mãi</Link>
             </nav>
           </div>
         )}
-      </div>
+      </Container>
     </header>
   );
 }
