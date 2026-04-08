@@ -2,11 +2,23 @@ import axios from 'axios';
 import type { InternalAxiosRequestConfig } from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const APP_BASE_URL = import.meta.env.BASE_URL || '/';
+const AUTH_ENDPOINTS = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth/reset-password', '/auth/google', '/auth/refresh'];
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
+
+const isAuthEndpoint = (url?: string) => {
+  if (!url) return false;
+  return AUTH_ENDPOINTS.some((endpoint) => url.includes(endpoint));
+};
+
+const buildAppUrl = (path: string) => {
+  const normalizedBase = APP_BASE_URL.endsWith('/') ? APP_BASE_URL : `${APP_BASE_URL}/`;
+  return `${normalizedBase}${path.replace(/^\/+/, '')}`;
+};
 
 let isRefreshing = false;
 let failedQueue: Array<{
@@ -47,6 +59,11 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
+    const requestUrl = originalRequest?.url as string | undefined;
+
+    if (error.response?.status === 401 && isAuthEndpoint(requestUrl)) {
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
@@ -101,7 +118,7 @@ function logout() {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('user');
-  window.location.href = '/login';
+  window.location.replace(buildAppUrl('/login'));
 }
 
 export default axiosInstance;
