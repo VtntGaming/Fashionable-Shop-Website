@@ -118,7 +118,7 @@ export default function ProductDetail() {
     : (product.imageUrl ? [product.imageUrl] : []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
         <Link to="/" className="hover:text-accent">Trang chủ</Link>

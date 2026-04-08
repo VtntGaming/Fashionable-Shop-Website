@@ -34,7 +34,7 @@ export default function Orders() {
   }, [page, filterStatus]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Đơn hàng của tôi</h1>
         <select

@@ -21,7 +21,7 @@ export default function Cart() {
 
   if (safeItems.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-16">
         <EmptyState
           icon={<ShoppingBag size={48} />}
           title="Giỏ hàng trống"
@@ -34,7 +34,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">Giỏ hàng ({itemCount} sản phẩm)</h1>
 
       <div className="grid lg:grid-cols-3 gap-8">

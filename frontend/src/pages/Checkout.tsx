@@ -95,7 +95,7 @@ export default function Checkout() {
   const finalTotal = totalAmount - (appliedVoucher?.discount || 0);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">Thanh toán</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>

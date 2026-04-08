@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal, X, ChevronDown } from 'lucide-react';
 import { productApi } from '@/api/productApi';
 import { categoryApi } from '@/api/categoryApi';
 import type { Product, ProductFilter } from '@/types/product';
@@ -12,6 +12,7 @@ import { SkeletonGrid } from '@/components/ui/LoadingSpinner';
 import { useCart } from '@/hooks/useCart';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 const SORT_OPTIONS = [
   { value: '', label: 'Mặc định' },
@@ -47,6 +48,8 @@ export default function Shop() {
   const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(true);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [categoryExpanded, setCategoryExpanded] = useState(true);
+  const [priceExpanded, setPriceExpanded] = useState(true);
   const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
   const { addToCart } = useCart();
 
@@ -104,8 +107,12 @@ export default function Shop() {
 
   const clearFilters = () => setSearchParams({});
 
+  const hasActiveFilters = !!(categoryId || keyword || minPrice || maxPrice);
+  const activeFilterCount = [categoryId, keyword, minPrice, maxPrice].filter(Boolean).length;
+  const selectedCategory = categories.find((c) => String(c.id) === categoryId);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold">Cửa hàng</h1>
@@ -123,17 +130,50 @@ export default function Shop() {
           </select>
           <button
             onClick={() => setFilterOpen(!filterOpen)}
-            className="flex items-center gap-2 text-sm border border-gray-200 rounded-lg px-3 py-2 hover:bg-gray-50 lg:hidden"
+            className="flex items-center gap-2 text-sm border border-gray-200 rounded-lg px-3 py-2 hover:bg-gray-50 lg:hidden relative"
           >
             <SlidersHorizontal size={16} /> Lọc
+            {activeFilterCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-accent text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                {activeFilterCount}
+              </span>
+            )}
           </button>
         </div>
       </div>
 
+      {/* Active filter chips */}
+      {hasActiveFilters && (
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <span className="text-sm text-gray-500">Bộ lọc:</span>
+          {selectedCategory && (
+            <span className="inline-flex items-center gap-1 bg-accent/10 text-accent text-xs font-medium px-3 py-1.5 rounded-full">
+              {selectedCategory.name}
+              <button onClick={() => updateParams({ categoryId: '' })} className="hover:text-accent-dark"><X size={12} /></button>
+            </span>
+          )}
+          {keyword && (
+            <span className="inline-flex items-center gap-1 bg-accent/10 text-accent text-xs font-medium px-3 py-1.5 rounded-full">
+              "{keyword}"
+              <button onClick={() => updateParams({ keyword: '' })} className="hover:text-accent-dark"><X size={12} /></button>
+            </span>
+          )}
+          {(minPrice || maxPrice) && (
+            <span className="inline-flex items-center gap-1 bg-accent/10 text-accent text-xs font-medium px-3 py-1.5 rounded-full">
+              {minPrice ? formatCurrency(parseInt(minPrice)) : '0'} - {maxPrice ? formatCurrency(parseInt(maxPrice)) : '∞'}
+              <button onClick={() => updateParams({ minPrice: '', maxPrice: '' })} className="hover:text-accent-dark"><X size={12} /></button>
+            </span>
+          )}
+          <button onClick={clearFilters} className="text-xs text-red-500 hover:underline ml-1">
+            Xóa tất cả
+          </button>
+        </div>
+      )}
+
       <div className="flex gap-6">
         {/* Sidebar - Desktop always visible, mobile as overlay */}
-        <aside className={`${filterOpen ? 'fixed inset-0 z-50 bg-black/50 lg:bg-transparent lg:static lg:z-auto' : 'hidden lg:block'} lg:w-60 flex-shrink-0`}>
-          <div className={`${filterOpen ? 'absolute right-0 top-0 h-full w-80 bg-white p-4 overflow-y-auto lg:static lg:w-auto lg:p-0' : 'bg-white border border-gray-200 rounded-xl p-4'}`}>
+        <aside className={`${filterOpen ? 'fixed inset-0 z-50 bg-black/50 lg:bg-transparent lg:static lg:z-auto' : 'hidden lg:block'} lg:w-[15%] lg:min-w-[14rem] lg:max-w-[16rem] flex-shrink-0`}>
+          <div className={`${filterOpen ? 'absolute right-0 top-0 h-full w-[85vw] max-w-[20rem] bg-white p-4 overflow-y-auto lg:static lg:w-auto lg:max-w-none lg:p-0' : 'bg-white border border-gray-200 rounded-xl p-4'}`}>
             {filterOpen && (
               <div className="flex items-center justify-between mb-4 lg:hidden">
                 <h3 className="font-semibold">Bộ lọc</h3>
@@ -141,69 +181,75 @@ export default function Shop() {
               </div>
             )}
 
-            {/* Category filter */}
-            <div className="mb-6">
-              <h4 className="font-semibold text-sm mb-3">Danh mục</h4>
-              <div className="space-y-1">
-                <button
-                  onClick={() => updateParams({ categoryId: '' })}
-                  className={`block w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${!categoryId ? 'bg-accent/10 text-accent font-medium' : 'hover:bg-gray-50'}`}
-                >
-                  Tất cả
-                </button>
-                {Array.isArray(categories) && categories.map((cat, index) => (
+            {/* Category filter - collapsible */}
+            <div className="mb-4">
+              <button
+                onClick={() => setCategoryExpanded(!categoryExpanded)}
+                className="flex items-center justify-between w-full font-semibold text-sm mb-2 hover:text-accent transition-colors"
+              >
+                Danh mục
+                <ChevronDown size={16} className={`transition-transform duration-200 ${categoryExpanded ? 'rotate-180' : ''}`} />
+              </button>
+              {categoryExpanded && (
+                <div className="space-y-1">
                   <button
-                    key={`category-${cat.id ?? cat.slug ?? index}`}
-                    onClick={() => { updateParams({ categoryId: String(cat.id) }); setFilterOpen(false); }}
-                    className={`block w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${categoryId === String(cat.id) ? 'bg-accent/10 text-accent font-medium' : 'hover:bg-gray-50'}`}
+                    onClick={() => updateParams({ categoryId: '' })}
+                    className={`block w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${!categoryId ? 'bg-accent/10 text-accent font-medium' : 'hover:bg-gray-50'}`}
                   >
-                    {cat.name}
+                    Tất cả
                   </button>
-                ))}
-              </div>
+                  {Array.isArray(categories) && categories.map((cat, index) => (
+                    <button
+                      key={`category-${cat.id ?? cat.slug ?? index}`}
+                      onClick={() => { updateParams({ categoryId: String(cat.id) }); setFilterOpen(false); }}
+                      className={`block w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${categoryId === String(cat.id) ? 'bg-accent/10 text-accent font-medium' : 'hover:bg-gray-50'}`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Price filter */}
-            <div className="mb-6">
-              <h4 className="font-semibold text-sm mb-3">Khoảng giá</h4>
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  placeholder="Từ"
-                  value={minPrice}
-                  onChange={(e) => updateParams({ minPrice: e.target.value })}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-accent"
-                />
-                <input
-                  type="number"
-                  placeholder="Đến"
-                  value={maxPrice}
-                  onChange={(e) => updateParams({ maxPrice: e.target.value })}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-accent"
-                />
-              </div>
+            {/* Price filter - collapsible */}
+            <div className="mb-4">
+              <button
+                onClick={() => setPriceExpanded(!priceExpanded)}
+                className="flex items-center justify-between w-full font-semibold text-sm mb-2 hover:text-accent transition-colors"
+              >
+                Khoảng giá
+                <ChevronDown size={16} className={`transition-transform duration-200 ${priceExpanded ? 'rotate-180' : ''}`} />
+              </button>
+              {priceExpanded && (
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    placeholder="Từ"
+                    value={minPrice}
+                    onChange={(e) => updateParams({ minPrice: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-accent"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Đến"
+                    value={maxPrice}
+                    onChange={(e) => updateParams({ maxPrice: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-accent"
+                  />
+                </div>
+              )}
             </div>
 
-            {(categoryId || keyword || minPrice || maxPrice) && (
-              <button onClick={clearFilters} className="text-sm text-red-500 hover:underline">
-                Xóa bộ lọc
+            {hasActiveFilters && (
+              <button onClick={clearFilters} className="w-full text-sm text-red-500 border border-red-200 rounded-lg py-2 hover:bg-red-50 transition-colors">
+                Xóa tất cả bộ lọc
               </button>
             )}
           </div>
         </aside>
 
         {/* Product grid */}
-        <div className="flex-1">
-          {keyword && (
-            <div className="mb-4 flex items-center gap-2">
-              <span className="text-sm text-gray-500">Kết quả tìm kiếm cho:</span>
-              <span className="text-sm font-medium bg-gray-100 px-3 py-1 rounded-full">"{keyword}"</span>
-              <button onClick={() => updateParams({ keyword: '' })} className="text-gray-400 hover:text-gray-600">
-                <X size={16} />
-              </button>
-            </div>
-          )}
-
+        <div className="flex-1 min-w-0">
           {loading ? (
             <SkeletonGrid count={12} />
           ) : products.length === 0 ? (

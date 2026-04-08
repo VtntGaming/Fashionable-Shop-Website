@@ -36,7 +36,7 @@ export default function Wishlist() {
   const safeItems = Array.isArray(items) ? items : [];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">Danh sách yêu thích ({safeItems.length})</h1>
 
       {safeItems.length === 0 ? (

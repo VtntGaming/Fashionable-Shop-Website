@@ -38,8 +38,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden rounded-2xl shadow-lg border border-gray-200">
+    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-[90%] lg:max-w-4xl grid md:grid-cols-2 overflow-hidden rounded-2xl shadow-lg border border-gray-200">
         {/* Left - Illustration */}
         <div className="hidden md:flex flex-col justify-center bg-gradient-to-br from-primary to-primary-light text-white p-10">
           <div className="mb-8">

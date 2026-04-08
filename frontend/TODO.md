@@ -74,10 +74,11 @@ frontend/src/
 - Search bar có focus state rõ ràng
 - User dropdown có animation
 
-### [L2] Footer - Responsive
-- [ ] Link "Hỗ trợ" section đang dùng span, nên link thực tế
+### ~~[L2] Footer - Responsive~~ ✅ ĐÃ CẢI THIỆN
 - [x] Social media links đã có ✅
 - [x] Gradient background cải thiện ✅
+- [x] Responsive container (w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl) ✅
+- [ ] Link "Hỗ trợ" section đang dùng span, nên link thực tế
 
 ### [L3] UserLayout - Thiếu breadcrumb global
 - Chỉ có ProductDetail và OrderDetail có breadcrumb riêng
@@ -90,6 +91,17 @@ frontend/src/
 
 ### ~~[L5] Card border quá nhẹ~~ ✅ ĐÃ SỬA
 - ProductCard đã cải thiện border + shadow system
+
+### ~~[L6] Layout pixel-based → Responsive~~ ✅ ĐÃ SỬA
+- Tất cả trang chuyển từ `max-w-7xl mx-auto px-4` → `w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto`
+- Hero decoration dùng percentage-based sizing (`inset-[8%]`, `w-[min(100%,22rem)]`)
+- Background blobs dùng viewport-relative sizing (`w-[25vw] max-w-[20rem]`)
+- Search bar Header dùng `flex-1 max-w-xs lg:max-w-sm xl:max-w-md`
+- Shop filter sidebar dùng `lg:w-[15%] lg:min-w-[14rem] lg:max-w-[16rem]`
+- Login/Register min-height → `calc(100vh-8rem)` thay vì `80vh`
+- Mobile filter panel dùng `w-[85vw] max-w-[20rem]` thay vì `w-80`
+- Fluid typography: `clamp(2rem,5vw+0.5rem,3.75rem)` cho hero heading
+- CSS index.css thêm fluid typography base và responsive container utility
 
 ---
 
@@ -115,12 +127,13 @@ frontend/src/
 - Better shadow system (0_8px_30px)
 - Rounded-2xl corners
 
-### [D4] Shop - Filter Sidebar
-- **Cải thiện:**
-  - [ ] Collapse/expand sections
+### ~~[D4] Shop - Filter Sidebar~~ ✅ ĐÃ CẢI THIỆN
+- [x] Collapse/expand sections (category + price) ✅
+- [x] Active filter summary (chips) ✅
+- [x] Clear all filters button (styled) ✅
+- [x] Active filter count badge trên mobile filter button ✅
+- **Còn lại:**
   - [ ] Price range slider thay vì 2 input
-  - [ ] Active filter summary (chips)
-  - [ ] Clear all filters button
   - [ ] Brand filter
   - [ ] Rating filter
 

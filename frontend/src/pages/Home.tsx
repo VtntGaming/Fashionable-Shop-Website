@@ -79,40 +79,40 @@ export default function Home() {
     <div>
       {/* Hero Banner */}
       <section className="relative bg-gradient-to-br from-primary via-primary-light to-primary text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 lg:py-28 relative z-10">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
+        <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-16 md:py-24 lg:py-28 relative z-10">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left: Content */}
             <div>
               <p className="text-accent font-medium tracking-wider uppercase text-sm mb-4">Bộ sưu tập mới 2026</p>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+              <h1 className="text-[clamp(2rem,5vw,3.75rem)] font-bold leading-tight mb-6">
                 Phong cách <span className="text-accent">thời trang</span> của bạn
               </h1>
-              <p className="text-lg text-gray-300 mb-8 leading-relaxed max-w-lg">
+              <p className="text-base lg:text-lg text-gray-300 mb-8 leading-relaxed max-w-[90%]">
                 Khám phá bộ sưu tập mới nhất với chất lượng hàng đầu và thiết kế độc đáo.
               </p>
               <div className="flex flex-wrap items-center gap-4">
-                <Link to="/shop" className="inline-flex items-center gap-2 bg-accent text-white px-8 py-3.5 rounded-full font-medium hover:bg-accent-light hover:shadow-lg hover:shadow-accent/25 transition-all duration-300">
+                <Link to="/shop" className="inline-flex items-center gap-2 bg-accent text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium hover:bg-accent-light hover:shadow-lg hover:shadow-accent/25 transition-all duration-300">
                   Mua sắm ngay <ArrowRight size={18} />
                 </Link>
-                <Link to="/vouchers" className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-3.5 rounded-full font-medium hover:bg-white/10 transition-all duration-300">
+                <Link to="/vouchers" className="inline-flex items-center gap-2 border border-white/30 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium hover:bg-white/10 transition-all duration-300">
                   Xem ưu đãi
                 </Link>
               </div>
-              <div className="flex gap-8 mt-10 pt-8 border-t border-white/10">
-                <div><span className="text-2xl font-bold text-accent">1000+</span><p className="text-sm text-gray-400 mt-1">Sản phẩm</p></div>
-                <div><span className="text-2xl font-bold text-accent">500+</span><p className="text-sm text-gray-400 mt-1">Đánh giá</p></div>
-                <div><span className="text-2xl font-bold text-accent">99%</span><p className="text-sm text-gray-400 mt-1">Hài lòng</p></div>
+              <div className="flex gap-6 sm:gap-8 mt-10 pt-8 border-t border-white/10">
+                <div><span className="text-xl sm:text-2xl font-bold text-accent">1000+</span><p className="text-xs sm:text-sm text-gray-400 mt-1">Sản phẩm</p></div>
+                <div><span className="text-xl sm:text-2xl font-bold text-accent">500+</span><p className="text-xs sm:text-sm text-gray-400 mt-1">Đánh giá</p></div>
+                <div><span className="text-xl sm:text-2xl font-bold text-accent">99%</span><p className="text-xs sm:text-sm text-gray-400 mt-1">Hài lòng</p></div>
               </div>
             </div>
             {/* Right: Visual decoration */}
             <div className="hidden md:flex items-center justify-center relative">
-              <div className="relative w-80 h-80 lg:w-96 lg:h-96">
+              <div className="relative w-[min(100%,22rem)] lg:w-[min(100%,26rem)] aspect-square">
                 {/* Decorative rings */}
                 <div className="absolute inset-0 rounded-full border-2 border-accent/20 animate-[spin_20s_linear_infinite]" />
-                <div className="absolute inset-4 rounded-full border border-white/10 animate-[spin_15s_linear_infinite_reverse]" />
-                <div className="absolute inset-8 rounded-full border border-accent/10" />
+                <div className="absolute inset-[8%] rounded-full border border-white/10 animate-[spin_15s_linear_infinite_reverse]" />
+                <div className="absolute inset-[16%] rounded-full border border-accent/10" />
                 {/* Center circle with icon */}
-                <div className="absolute inset-12 rounded-full bg-gradient-to-br from-accent/20 to-accent/5 backdrop-blur-sm flex items-center justify-center">
+                <div className="absolute inset-[22%] rounded-full bg-gradient-to-br from-accent/20 to-accent/5 backdrop-blur-sm flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-5xl lg:text-6xl mb-2">👗</div>
                     <p className="text-accent font-semibold text-sm tracking-wider">FASHION</p>
@@ -120,15 +120,15 @@ export default function Home() {
                   </div>
                 </div>
                 {/* Floating badges */}
-                <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-md rounded-xl px-3 py-2 animate-bounce" style={{ animationDuration: '3s' }}>
+                <div className="absolute top-[5%] right-[5%] bg-white/10 backdrop-blur-md rounded-xl px-3 py-2 animate-bounce" style={{ animationDuration: '3s' }}>
                   <p className="text-accent font-bold text-sm">New</p>
                   <p className="text-white/70 text-[10px]">Collection</p>
                 </div>
-                <div className="absolute bottom-8 left-0 bg-white/10 backdrop-blur-md rounded-xl px-3 py-2 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
+                <div className="absolute bottom-[10%] left-0 bg-white/10 backdrop-blur-md rounded-xl px-3 py-2 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
                   <p className="text-accent font-bold text-sm">-50%</p>
                   <p className="text-white/70 text-[10px]">Sale off</p>
                 </div>
-                <div className="absolute top-1/2 -right-2 bg-accent/20 backdrop-blur-md rounded-xl px-3 py-2 animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }}>
+                <div className="absolute top-1/2 -right-[2%] bg-accent/20 backdrop-blur-md rounded-xl px-3 py-2 animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }}>
                   <p className="text-white font-bold text-sm">⭐ 4.9</p>
                   <p className="text-white/70 text-[10px]">Rating</p>
                 </div>
@@ -138,15 +138,15 @@ export default function Home() {
         </div>
         {/* Background blobs */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-10 right-20 w-80 h-80 rounded-full bg-accent blur-[100px]" />
-          <div className="absolute bottom-10 left-10 w-60 h-60 rounded-full bg-accent blur-[80px]" />
-          <div className="absolute top-1/2 right-1/4 w-40 h-40 rounded-full bg-white blur-[60px]" />
+          <div className="absolute top-[5%] right-[10%] w-[25vw] max-w-[20rem] aspect-square rounded-full bg-accent blur-[100px]" />
+          <div className="absolute bottom-[5%] left-[5%] w-[20vw] max-w-[15rem] aspect-square rounded-full bg-accent blur-[80px]" />
+          <div className="absolute top-1/2 right-1/4 w-[12vw] max-w-[10rem] aspect-square rounded-full bg-white blur-[60px]" />
         </div>
       </section>
 
       {/* Categories */}
       {Array.isArray(categories) && categories.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 py-14">
+        <section className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-14">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl font-bold">Danh mục sản phẩm</h2>
@@ -194,7 +194,7 @@ export default function Home() {
 
       {/* Featured Products */}
       <section className="bg-white py-14">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -222,7 +222,7 @@ export default function Home() {
       {/* Trending */}
       {Array.isArray(trending) && trending.length > 0 && (
         <section className="bg-gradient-to-b from-gray-50 to-white py-14">
-          <div className="max-w-7xl mx-auto px-4">
+            <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <div className="flex items-center gap-2 mb-1">
@@ -245,8 +245,8 @@ export default function Home() {
       )}
 
       {/* CTA Banner */}
-      <section className="max-w-7xl mx-auto px-4 py-14">
-        <div className="relative bg-gradient-to-r from-primary via-primary-light to-primary rounded-3xl overflow-hidden px-8 py-12 md:py-16 md:px-14">
+      <section className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-14">
+        <div className="relative bg-gradient-to-r from-primary via-primary-light to-primary rounded-3xl overflow-hidden px-6 sm:px-8 py-10 sm:py-12 md:py-16 md:px-14">
           <div className="relative z-10 max-w-lg">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Đăng ký nhận ưu đãi</h2>
             <p className="text-gray-300 mb-6">Nhận ngay voucher giảm giá khi đăng ký tài khoản mới. Cập nhật xu hướng thời trang mới nhất.</p>
@@ -260,8 +260,8 @@ export default function Home() {
             </div>
           </div>
           <div className="absolute inset-0 opacity-15 pointer-events-none">
-            <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-accent blur-[80px]" />
-            <div className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full bg-white blur-[60px]" />
+            <div className="absolute top-0 right-0 w-[20vw] max-w-[16rem] aspect-square rounded-full bg-accent blur-[80px]" />
+            <div className="absolute bottom-0 left-1/3 w-[15vw] max-w-[12rem] aspect-square rounded-full bg-white blur-[60px]" />
           </div>
         </div>
       </section>
@@ -269,7 +269,7 @@ export default function Home() {
       {/* Vouchers */}
       {Array.isArray(vouchers) && vouchers.length > 0 && (
         <section className="bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 py-14">
-          <div className="max-w-7xl mx-auto px-4">
+            <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <div className="flex items-center gap-2 mb-1">
