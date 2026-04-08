@@ -1,14 +1,15 @@
 // ===== Configuration =====
 const DEPLOY_API_BASE_URL = '__API_BASE_URL__';
+const DEFAULT_PRODUCTION_API_BASE_URL = 'https://fashionwebj2ee-production.up.railway.app/api';
 const isLocalDev = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 const isInjectedApiBaseUrl = /^(https?:)?\/\//i.test(DEPLOY_API_BASE_URL) || DEPLOY_API_BASE_URL.startsWith('/api');
-const runtimeApiBaseUrl = isInjectedApiBaseUrl
-  ? DEPLOY_API_BASE_URL
-  : (isLocalDev ? (window.location.port === '8080' ? '/api' : 'http://localhost:8080/api') : '/api');
+const runtimeApiBaseUrl = isLocalDev
+  ? (window.location.port === '8080' ? '/api' : 'http://localhost:8080/api')
+  : (isInjectedApiBaseUrl ? DEPLOY_API_BASE_URL : DEFAULT_PRODUCTION_API_BASE_URL);
 const runtimeOrigin = runtimeApiBaseUrl.replace(/\/api\/?$/, '') || (isLocalDev ? 'http://localhost:8080' : window.location.origin);
 
 const Config = {
-  // Local dev uses localhost:8080, GitHub Pages deploy injects secrets.API_BASE_URL here.
+  // Local dev uses localhost:8080, non-local uses Railway by default unless Pages injects another API URL.
   API_BASE_URL: runtimeApiBaseUrl,
   API_ORIGIN: runtimeOrigin,
   UPLOADS_BASE_URL: runtimeOrigin + '/uploads',
