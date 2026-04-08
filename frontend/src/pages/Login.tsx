@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { GOOGLE_OAUTH_URL } from '@/utils/constants';
 
 const loginSchema = z.object({
-  email: z.string().email('Email không hợp lệ'),
+  email: z.string().trim().email('Email không hợp lệ'),
   password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
 });
 type LoginForm = z.infer<typeof loginSchema>;
@@ -19,15 +19,22 @@ export default function Login() {
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
 
-  const from = (location.state as { from?: string })?.from || '/';
+  const fromState = (location.state as { from?: { pathname?: string } | string } | null)?.from;
+  const redirectTo = typeof fromState === 'string' ? fromState : fromState?.pathname || '/';
 
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (data: LoginForm) => {
-    const success = await login(data);
-    if (success) navigate(from, { replace: true });
+    const success = await login({
+      email: data.email.trim().toLowerCase(),
+      password: data.password,
+    });
+
+    if (success) {
+      navigate(redirectTo, { replace: true });
+    }
   };
 
   return (

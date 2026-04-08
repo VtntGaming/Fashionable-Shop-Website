@@ -3,12 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 const registerSchema = z.object({
-  fullName: z.string().min(2, 'Tên phải có ít nhất 2 ký tự'),
-  email: z.string().email('Email không hợp lệ'),
+  fullName: z.string().trim().min(2, 'Tên phải có ít nhất 2 ký tự'),
+  email: z.string().trim().email('Email không hợp lệ'),
+  phone: z.string().trim().max(20, 'Số điện thoại không được quá 20 ký tự'),
   password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
   confirmPassword: z.string(),
 }).refine((d) => d.password === d.confirmPassword, {
@@ -24,11 +25,26 @@ export default function Register() {
 
   const { register, handleSubmit, formState: { errors } } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      phone: '',
+      password: '',
+      confirmPassword: '',
+    },
   });
 
   const onSubmit = async (data: RegisterForm) => {
-    const success = await registerUser({ fullName: data.fullName, email: data.email, password: data.password });
-    if (success) navigate('/login');
+    const success = await registerUser({
+      fullName: data.fullName.trim(),
+      email: data.email.trim().toLowerCase(),
+      password: data.password,
+      phone: data.phone.trim() || undefined,
+    });
+
+    if (success) {
+      navigate('/', { replace: true });
+    }
   };
 
   return (
@@ -85,6 +101,20 @@ export default function Register() {
                 />
               </div>
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1.5">Số điện thoại</label>
+              <div className="relative">
+                <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  {...register('phone')}
+                  type="tel"
+                  placeholder="0901234567"
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent"
+                />
+              </div>
+              {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
             </div>
 
             <div>
