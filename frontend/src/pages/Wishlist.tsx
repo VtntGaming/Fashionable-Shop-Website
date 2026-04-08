@@ -16,8 +16,8 @@ export default function Wishlist() {
   const fetchWishlist = () => {
     setLoading(true);
     wishlistApi.getWishlist()
-      .then(setItems)
-      .catch(() => {})
+      .then((data) => setItems(Array.isArray(data) ? data : []))
+      .catch(() => setItems([]))
       .finally(() => setLoading(false));
   };
 
@@ -33,11 +33,13 @@ export default function Wishlist() {
 
   if (loading) return <LoadingSpinner />;
 
+  const safeItems = Array.isArray(items) ? items : [];
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Danh sách yêu thích ({items.length})</h1>
+      <h1 className="text-2xl font-bold mb-6">Danh sách yêu thích ({safeItems.length})</h1>
 
-      {items.length === 0 ? (
+      {safeItems.length === 0 ? (
         <EmptyState
           icon={<Heart size={48} />}
           title="Chưa có sản phẩm yêu thích"
@@ -47,7 +49,7 @@ export default function Wishlist() {
         />
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {items.map((item) => (
+          {safeItems.map((item) => (
             <div key={item.id} className="relative group">
               <ProductCard
                 product={{

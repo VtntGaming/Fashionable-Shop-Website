@@ -50,9 +50,9 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    // Unwrap ApiResponse<T> wrapper: { success, data, message?, timestamp }
+    // Unwrap ApiResponse<T> wrapper: { success, data, message?, timestamp? }
     const body = response.data;
-    if (body && typeof body === 'object' && 'success' in body && 'timestamp' in body) {
+    if (body && typeof body === 'object' && 'success' in body && 'data' in body) {
       response.data = body.data;
     }
     return response;

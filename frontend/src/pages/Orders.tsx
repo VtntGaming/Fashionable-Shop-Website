@@ -22,8 +22,14 @@ export default function Orders() {
     const params: Record<string, unknown> = { page, size: ITEMS_PER_PAGE };
     if (filterStatus) params.status = filterStatus;
     orderApi.getMyOrders(params as { page: number; size: number })
-      .then((res) => { setOrders(res.content); setTotalPages(res.totalPages); })
-      .catch(() => {})
+      .then((res) => {
+        setOrders(Array.isArray(res?.content) ? res.content : []);
+        setTotalPages(Number(res?.totalPages) || 0);
+      })
+      .catch(() => {
+        setOrders([]);
+        setTotalPages(0);
+      })
       .finally(() => setLoading(false));
   }, [page, filterStatus]);
 
@@ -50,6 +56,7 @@ export default function Orders() {
           <div className="space-y-4">
             {orders.map((order) => {
               const statusInfo = ORDER_STATUS_MAP[order.status] || { label: order.status, color: 'bg-gray-100 text-gray-800' };
+              const orderItems = Array.isArray(order.items) ? order.items : [];
               return (
                 <div key={order.id} className="bg-white border border-gray-100 rounded-xl p-4 md:p-6">
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
@@ -64,14 +71,14 @@ export default function Orders() {
                   </div>
 
                   <div className="space-y-2 mb-4">
-                    {order.items.slice(0, 3).map((item) => (
+                    {orderItems.slice(0, 3).map((item) => (
                       <div key={item.id} className="flex items-center gap-3 text-sm">
                         <span className="text-gray-600 truncate flex-1">{item.productName}</span>
                         <span className="text-gray-400">x{item.quantity}</span>
                         <span className="font-medium">{formatCurrency(item.subtotal)}</span>
                       </div>
                     ))}
-                    {order.items.length > 3 && <p className="text-xs text-gray-400">+{order.items.length - 3} sản phẩm khác</p>}
+                    {orderItems.length > 3 && <p className="text-xs text-gray-400">+{orderItems.length - 3} sản phẩm khác</p>}
                   </div>
 
                   <div className="flex items-center justify-between pt-3 border-t border-gray-100">

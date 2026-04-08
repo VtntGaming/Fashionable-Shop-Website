@@ -38,8 +38,8 @@ export default function VoucherManagement() {
   const fetchVouchers = () => {
     setLoading(true);
     voucherApi.getAllVouchers()
-      .then(setVouchers)
-      .catch(() => {})
+      .then((data) => setVouchers(Array.isArray(data) ? data : []))
+      .catch(() => setVouchers([]))
       .finally(() => setLoading(false));
   };
 

@@ -42,6 +42,24 @@ public class ReviewController {
     }
 
     /**
+     * Get all reviews (Admin only)
+     */
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Page<ReviewResponse>>> getAllReviews(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String status) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ReviewResponse> reviews = reviewService.getAllReviews(status, pageable);
+        return ResponseEntity.ok(ApiResponse.<Page<ReviewResponse>>builder()
+                .success(true)
+                .message("All reviews retrieved successfully")
+                .data(reviews)
+                .build());
+    }
+
+    /**
      * Get review by ID
      */
     @GetMapping("/{id}")

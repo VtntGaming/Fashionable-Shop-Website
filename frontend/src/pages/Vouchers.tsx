@@ -15,8 +15,8 @@ export default function Vouchers() {
 
   useEffect(() => {
     voucherApi.getActiveVouchers()
-      .then(setVouchers)
-      .catch(() => {})
+      .then((data) => setVouchers(Array.isArray(data) ? data : []))
+      .catch(() => setVouchers([]))
       .finally(() => setLoading(false));
   }, []);
 

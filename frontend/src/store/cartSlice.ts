@@ -20,9 +20,9 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     setCart: (state, action: PayloadAction<{ items: CartItem[]; totalAmount: number; itemCount: number }>) => {
-      state.items = action.payload.items;
-      state.totalAmount = action.payload.totalAmount;
-      state.itemCount = action.payload.itemCount;
+      state.items = Array.isArray(action.payload.items) ? action.payload.items : [];
+      state.totalAmount = Number(action.payload.totalAmount) || 0;
+      state.itemCount = Number(action.payload.itemCount) || state.items.length;
     },
     clearCartState: (state) => {
       state.items = [];

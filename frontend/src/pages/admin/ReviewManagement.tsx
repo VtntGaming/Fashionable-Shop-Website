@@ -20,8 +20,14 @@ export default function ReviewManagement() {
     const params: Record<string, unknown> = { page, size: 10 };
     if (filterStatus) params.status = filterStatus;
     reviewApi.getAllReviews(params as never)
-      .then((res) => { setReviews(res.content); setTotalPages(res.totalPages); })
-      .catch(() => {})
+      .then((res) => {
+        setReviews(Array.isArray(res?.content) ? res.content : []);
+        setTotalPages(Number(res?.totalPages) || 0);
+      })
+      .catch(() => {
+        setReviews([]);
+        setTotalPages(0);
+      })
       .finally(() => setLoading(false));
   };
 

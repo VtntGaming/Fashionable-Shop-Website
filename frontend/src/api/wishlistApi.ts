@@ -1,9 +1,14 @@
 import axiosInstance from './axiosInstance';
 import type { WishlistItem } from '@/types/payment';
 
+interface WishlistResponse {
+  items?: WishlistItem[];
+  itemCount?: number;
+}
+
 export const wishlistApi = {
   getWishlist: () =>
-    axiosInstance.get<WishlistItem[]>('/wishlists').then((r) => r.data),
+    axiosInstance.get<WishlistResponse>('/wishlists').then((r) => Array.isArray(r.data?.items) ? r.data.items : []),
 
   checkWishlist: (productId: number) =>
     axiosInstance.get<boolean>(`/wishlists/check/${productId}`).then((r) => r.data),

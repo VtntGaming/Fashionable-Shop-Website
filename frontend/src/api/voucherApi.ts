@@ -10,10 +10,10 @@ export const voucherApi = {
     axiosInstance.get<Voucher>(`/vouchers/${code}`).then((r) => r.data),
 
   validateVoucher: (data: { code: string; orderAmount: number }) =>
-    axiosInstance.post<{ discountAmount: number }>('/vouchers/validate', data).then((r) => r.data),
+    axiosInstance.post<number>('/vouchers/validate', null, { params: data }).then((r) => ({ discountAmount: Number(r.data) || 0 })),
 
-  getAllVouchers: () =>
-    axiosInstance.get<Voucher[]>('/vouchers/admin/all').then((r) => r.data),
+  getAllVouchers: (params?: { page?: number; size?: number }) =>
+    axiosInstance.get<PaginatedResponse<Voucher>>('/vouchers/admin/all', { params }).then((r) => Array.isArray(r.data?.content) ? r.data.content : []),
 
   createVoucher: (data: CreateVoucherRequest) =>
     axiosInstance.post<Voucher>('/vouchers', data).then((r) => r.data),
@@ -25,5 +25,5 @@ export const voucherApi = {
     axiosInstance.delete(`/vouchers/${id}`).then((r) => r.data),
 
   getActiveVouchers: (params?: { page?: number; size?: number }) =>
-    axiosInstance.get<PaginatedResponse<Voucher>>('/vouchers/active', { params }).then((r) => r.data.content || r.data),
+    axiosInstance.get<PaginatedResponse<Voucher>>('/vouchers', { params }).then((r) => Array.isArray(r.data?.content) ? r.data.content : []),
 };
