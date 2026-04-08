@@ -1,0 +1,267 @@
+/* ===== Admin Layout ===== */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - var(--header-height));
+}
+
+.admin-sidebar {
+  background: var(--bg-dark);
+  padding: 24px 0;
+  position: sticky;
+  top: var(--header-height);
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+}
+
+.admin-sidebar-header {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 16px;
+}
+
+.admin-sidebar-header h3 {
+  color: var(--white);
+  font-size: 1rem;
+}
+
+.admin-sidebar-header p {
+  color: rgba(255,255,255,0.4);
+  font-size: 0.8125rem;
+}
+
+.admin-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9375rem;
+  transition: var(--transition);
+}
+
+.admin-nav a:hover {
+  color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.04);
+}
+
+.admin-nav a.active {
+  color: var(--white);
+  background: rgba(108,92,231,0.2);
+  border-right: 3px solid var(--primary-light);
+}
+
+.admin-nav a i {
+  width: 20px;
+  text-align: center;
+}
+
+.admin-content {
+  padding: 32px;
+  background: var(--bg);
+  overflow-y: auto;
+}
+
+.admin-content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.admin-content-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* ===== Admin Stats Cards ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.stat-card-icon.purple {
+  background: rgba(108,92,231,0.12);
+  color: var(--primary);
+}
+
+.stat-card-icon.green {
+  background: rgba(0,184,148,0.12);
+  color: var(--success);
+}
+
+.stat-card-icon.pink {
+  background: rgba(253,121,168,0.12);
+  color: var(--accent);
+}
+
+.stat-card-icon.blue {
+  background: rgba(116,185,255,0.12);
+  color: var(--info);
+}
+
+.stat-card-info h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stat-card-info p {
+  color: var(--text-light);
+  font-size: 0.8125rem;
+}
+
+/* ===== Admin Tables ===== */
+.admin-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+}
+
+.admin-search i { color: var(--text-muted); }
+
+.admin-search input {
+  border: none;
+  padding: 10px 0;
+  width: 240px;
+}
+
+.admin-search input:focus { box-shadow: none; }
+
+.admin-table-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.admin-table-actions button {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+}
+
+.admin-table-actions .edit-btn {
+  background: rgba(108,92,231,0.08);
+  color: var(--primary);
+}
+
+.admin-table-actions .edit-btn:hover {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.admin-table-actions .delete-btn {
+  background: rgba(225,112,85,0.08);
+  color: var(--danger);
+}
+
+.admin-table-actions .delete-btn:hover {
+  background: var(--danger);
+  color: var(--white);
+}
+
+/* ===== Status Badges ===== */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-pending { background: rgba(253,203,110,0.2); color: #E17055; }
+.status-pending::before { background: #E17055; }
+
+.status-paid { background: rgba(116,185,255,0.12); color: #0984E3; }
+.status-paid::before { background: #0984E3; }
+
+.status-shipping { background: rgba(108,92,231,0.12); color: var(--primary); }
+.status-shipping::before { background: var(--primary); }
+
+.status-delivered { background: rgba(0,184,148,0.12); color: var(--success); }
+.status-delivered::before { background: var(--success); }
+
+.status-cancelled { background: rgba(225,112,85,0.12); color: var(--danger); }
+.status-cancelled::before { background: var(--danger); }
+
+.status-active { background: rgba(0,184,148,0.12); color: var(--success); }
+.status-active::before { background: var(--success); }
+
+.status-inactive { background: rgba(225,112,85,0.12); color: var(--danger); }
+.status-inactive::before { background: var(--danger); }
+
+/* ===== Admin Form Modal ===== */
+.admin-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ===== Responsive Admin ===== */
+@media (max-width: 768px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    left: -260px;
+    top: var(--header-height);
+    z-index: 99;
+    transition: var(--transition);
+  }
+
+  .admin-sidebar.show { left: 0; }
+
+  .admin-content { padding: 16px; }
+
+  .admin-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
