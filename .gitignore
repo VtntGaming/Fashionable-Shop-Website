@@ -29,3 +29,10 @@ frontend/dist/
 frontend/.env
 frontend/.env.local
 frontend/.env.*.local
+
+# ===== Backend / deploy =====
+backend/.env.properties
+backend/.env
+backend/target/
+backend/uploads/
+uploads/
