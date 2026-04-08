@@ -1,15 +1,18 @@
 // ===== Configuration =====
 const DEPLOY_API_BASE_URL = '__API_BASE_URL__';
-const runtimeApiBaseUrl = DEPLOY_API_BASE_URL !== '__API_BASE_URL__'
+const isLocalDev = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const isInjectedApiBaseUrl = /^(https?:)?\/\//i.test(DEPLOY_API_BASE_URL) || DEPLOY_API_BASE_URL.startsWith('/api');
+const runtimeApiBaseUrl = isInjectedApiBaseUrl
   ? DEPLOY_API_BASE_URL
-  : (window.location.port === '8080' ? '/api' : 'http://localhost:8080/api');
-const runtimeOrigin = runtimeApiBaseUrl.replace(/\/api\/?$/, '');
+  : (isLocalDev ? (window.location.port === '8080' ? '/api' : 'http://localhost:8080/api') : '/api');
+const runtimeOrigin = runtimeApiBaseUrl.replace(/\/api\/?$/, '') || (isLocalDev ? 'http://localhost:8080' : window.location.origin);
 
 const Config = {
   // Local dev uses localhost:8080, GitHub Pages deploy injects secrets.API_BASE_URL here.
   API_BASE_URL: runtimeApiBaseUrl,
-  UPLOADS_BASE_URL: runtimeOrigin ? runtimeOrigin + '/uploads' : '/uploads',
-  GOOGLE_OAUTH_URL: runtimeOrigin ? runtimeOrigin + '/oauth2/authorization/google' : 'http://localhost:8080/oauth2/authorization/google',
+  API_ORIGIN: runtimeOrigin,
+  UPLOADS_BASE_URL: runtimeOrigin + '/uploads',
+  GOOGLE_OAUTH_URL: runtimeOrigin + '/oauth2/authorization/google',
   ITEMS_PER_PAGE: 12,
   ADMIN_ITEMS_PER_PAGE: 10,
 };

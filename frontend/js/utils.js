@@ -36,11 +36,10 @@ function getImageUrl(url) {
   if (!url) return '';
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
   if (url.startsWith('/')) {
-    // Absolute paths need backend origin when running frontend separately
-    if (window.location.port !== '8080') return 'http://localhost:8080' + url;
-    return url;
+    const baseOrigin = (Config.API_ORIGIN || '').replace(/\/$/, '');
+    return baseOrigin ? baseOrigin + url : url;
   }
-  return Config.UPLOADS_BASE_URL + '/' + url;
+  return (Config.UPLOADS_BASE_URL || '').replace(/\/$/, '') + '/' + String(url).replace(/^\//, '');
 }
 
 function debounce(fn, delay = 300) {

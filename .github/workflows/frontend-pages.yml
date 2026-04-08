@@ -41,7 +41,12 @@ jobs:
             echo "API_BASE_URL secret is not set" >&2
             exit 1
           fi
+          echo "Using API_BASE_URL=$API_BASE_URL"
           sed -i "s|__API_BASE_URL__|$API_BASE_URL|g" frontend/js/config.js
+          if grep -q "__API_BASE_URL__" frontend/js/config.js; then
+            echo "API placeholder replacement failed" >&2
+            exit 1
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

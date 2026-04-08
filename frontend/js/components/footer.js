@@ -40,13 +40,13 @@ const Footer = {
           </div>
           <div class="footer-col">
             <h4>Liên hệ</h4>
-            <a href="#"><i class="fas fa-map-marker-alt"></i> TP. Hồ Chí Minh</a>
+            <a href="#"><i class="fas fa-map-marker-alt"></i>  TP. Hồ Chí Minh</a>
             <a href="#"><i class="fas fa-phone"></i> 0123 456 789</a>
             <a href="#"><i class="fas fa-envelope"></i> info@fashionable.vn</a>
           </div>
         </div>
         <div class="footer-bottom">
-          <p>&copy; ${new Date().getFullYear()} Fashionable Shop. All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} Fashionable Shop. HUTECH J2EE. All rights reserved.</p>
         </div>
       </div>
     `;
