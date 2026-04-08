@@ -47,7 +47,13 @@ const Api = {
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
-      const msg = data?.message || `Lỗi ${response.status}`;
+      const validationMsg = data?.data && typeof data.data === 'object'
+        ? Object.values(data.data).find((value) => typeof value === 'string' && value.trim())
+        : null;
+      const fallbackMsg = response.status === 403
+        ? 'Bạn không có quyền thực hiện thao tác này'
+        : `Lỗi ${response.status}`;
+      const msg = validationMsg || data?.message || fallbackMsg;
       const err = new Error(msg);
       err.status = response.status;
       err.data = data;

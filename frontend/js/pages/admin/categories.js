@@ -38,11 +38,21 @@ const AdminCategoriesPage = {
 
   showForm(cat) {
     const isEdit = !!cat;
-    const c = cat || { name: '', description: '' };
+    const c = cat || { name: '', slug: '', description: '' };
+    const initialSlug = c.slug || slugify(c.name || '');
     Modal.show(
       isEdit ? 'Chỉnh sửa danh mục' : 'Thêm danh mục',
       `<form id="category-form">
-        <div class="form-group"><label>Tên danh mục *</label><input type="text" name="name" class="form-control" value="${sanitizeHTML(c.name)}" required /></div>
+        <div class="form-group">
+          <label>Tên danh mục *</label>
+          <input type="text" name="name" class="form-control" value="${sanitizeHTML(c.name)}" required
+            oninput="const slugField = document.querySelector('#category-form [name=slug]'); if (slugField && !slugField.dataset.manual) slugField.value = slugify(this.value);" />
+        </div>
+        <div class="form-group">
+          <label>Slug *</label>
+          <input type="text" name="slug" class="form-control" value="${sanitizeHTML(initialSlug)}" required
+            placeholder="vi-du-thoi-trang-nu" oninput="this.dataset.manual='true'" />
+        </div>
         <div class="form-group"><label>Mô tả</label><textarea name="description" class="form-control" rows="3">${sanitizeHTML(c.description || '')}</textarea></div>
       </form>`,
       `<button class="btn btn-secondary" onclick="Modal.hide()">Hủy</button>
@@ -54,7 +64,19 @@ const AdminCategoriesPage = {
     const form = document.getElementById('category-form');
     if (!form.checkValidity()) { form.reportValidity(); return; }
     try {
-      const data = { name: form.name.value.trim(), description: form.description.value.trim() };
+      const name = form.name.value.trim();
+      const slug = slugify(form.slug.value.trim() || name);
+      if (!slug) {
+        Toast.error('Slug danh mục không hợp lệ');
+        return;
+      }
+
+      const data = {
+        name,
+        slug,
+        description: form.description.value.trim()
+      };
+
       if (id) {
         await Api.adminUpdateCategory(id, data);
       } else {

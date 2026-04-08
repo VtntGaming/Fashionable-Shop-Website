@@ -78,7 +78,7 @@ const AdminProductsPage = {
   },
 
   async showForm(id) {
-    let product = { name: '', description: '', price: '', salePrice: '', stock: '', categoryId: '', status: 'ACTIVE' };
+    let product = { name: '', slug: '', description: '', price: '', salePrice: '', stock: '', categoryId: '', status: 'ACTIVE' };
     if (id) {
       try { product = await Api.getProduct(id); } catch (_) {}
     }
@@ -86,7 +86,16 @@ const AdminProductsPage = {
     Modal.show(
       id ? 'Chỉnh sửa sản phẩm' : 'Thêm sản phẩm',
       `<form id="product-form">
-        <div class="form-group"><label>Tên sản phẩm *</label><input type="text" name="name" class="form-control" value="${sanitizeHTML(product.name)}" required /></div>
+        <div class="form-group">
+          <label>Tên sản phẩm *</label>
+          <input type="text" name="name" class="form-control" value="${sanitizeHTML(product.name)}" required
+            oninput="const slugField = document.querySelector('#product-form [name=slug]'); if (slugField && !slugField.dataset.manual) slugField.value = slugify(this.value);" />
+        </div>
+        <div class="form-group">
+          <label>Slug *</label>
+          <input type="text" name="slug" class="form-control" value="${sanitizeHTML(product.slug || slugify(product.name || ''))}" required
+            placeholder="ao-so-mi-nam" oninput="this.dataset.manual='true'" />
+        </div>
         <div class="form-group"><label>Mô tả</label><textarea name="description" class="form-control" rows="3">${sanitizeHTML(product.description || '')}</textarea></div>
         <div class="flex gap-3">
           <div class="form-group" style="flex:1"><label>Giá *</label><input type="number" name="price" class="form-control" value="${product.price || ''}" required min="0" /></div>
@@ -112,13 +121,21 @@ const AdminProductsPage = {
     const form = document.getElementById('product-form');
     if (!form.checkValidity()) { form.reportValidity(); return; }
     try {
+      const name = form.name.value.trim();
+      const slug = slugify(form.slug.value.trim() || name);
+      if (!slug) {
+        Toast.error('Slug sản phẩm không hợp lệ');
+        return;
+      }
+
       const payload = {
-        name: form.name.value.trim(),
+        name,
+        slug,
         description: form.description.value.trim(),
         price: parseFloat(form.price.value),
         salePrice: form.salePrice.value ? parseFloat(form.salePrice.value) : null,
-        stock: parseInt(form.stock.value),
-        categoryId: parseInt(form.categoryId.value)
+        stock: parseInt(form.stock.value, 10),
+        categoryId: parseInt(form.categoryId.value, 10)
       };
       let result;
       if (id) {
@@ -126,11 +143,16 @@ const AdminProductsPage = {
       } else {
         result = await Api.adminCreateProduct(payload);
       }
-      // Upload image if selected
+
+      const productId = result?.id || id;
       const imageFile = form.image.files[0];
-      if (imageFile) {
-        await Api.uploadProductImage(result.id || id, imageFile);
+      if (imageFile && productId) {
+        const uploadResult = await Api.uploadProductImage(productId, imageFile);
+        if (uploadResult?.fileUrl) {
+          await Api.adminUpdateProduct(productId, { imageUrl: uploadResult.fileUrl });
+        }
       }
+
       Modal.hide();
       Toast.success(id ? 'Đã cập nhật' : 'Đã tạo sản phẩm');
       this.render(document.querySelector('.admin-content') || document.getElementById('main-content'));
