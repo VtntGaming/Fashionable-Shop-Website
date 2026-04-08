@@ -12,7 +12,10 @@ import { voucherApi } from '@/api/voucherApi';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { ImageWithFallback } from '@/components/ui/ImageWithFallback';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Container from '@/components/ui/Container';
+import PageHeader from '@/components/common/PageHeader';
 import { useCart } from '@/hooks/useCart';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import toast from 'react-hot-toast';
 
 const checkoutSchema = z.object({
@@ -27,6 +30,7 @@ export default function Checkout() {
   const user = useSelector((s: RootState) => s.auth.user);
   const { fetchCart } = useCart();
   const navigate = useNavigate();
+  usePageTitle('Thanh toán');
   const [submitting, setSubmitting] = useState(false);
   const [voucherCode, setVoucherCode] = useState('');
   const [appliedVoucher, setAppliedVoucher] = useState<{ id: number; code: string; discount: number } | null>(null);
@@ -42,7 +46,7 @@ export default function Checkout() {
 
   const paymentMethod = watch('paymentMethod');
 
-  useEffect(() => { fetchCart(); }, []);
+  useEffect(() => { fetchCart(); }, [fetchCart]);
 
   const handleApplyVoucher = async () => {
     if (!voucherCode.trim()) return;
@@ -95,15 +99,18 @@ export default function Checkout() {
   const finalTotal = totalAmount - (appliedVoucher?.discount || 0);
 
   return (
-    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Thanh toán</h1>
+    <Container className="page-padding">
+      <PageHeader
+        title="Thanh toán"
+        breadcrumbs={[{ label: 'Trang chủ', to: '/' }, { label: 'Giỏ hàng', to: '/cart' }, { label: 'Thanh toán' }]}
+      />
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left - form */}
           <div className="lg:col-span-2 space-y-6">
             {/* Shipping */}
-            <div className="bg-white border border-gray-100 rounded-xl p-6">
+            <div className="card p-6">
               <h2 className="font-bold mb-4 flex items-center gap-2"><MapPin size={18} /> Thông tin giao hàng</h2>
               <div className="space-y-4">
                 <div>
@@ -112,19 +119,19 @@ export default function Checkout() {
                     {...register('shippingAddress')}
                     rows={2}
                     placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-accent resize-none"
+                    className="w-full border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-accent resize-none"
                   />
                   {errors.shippingAddress && <p className="text-red-500 text-xs mt-1">{errors.shippingAddress.message}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1.5">Số điện thoại</label>
                   <div className="relative">
-                    <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input
                       {...register('phone')}
                       type="tel"
                       placeholder="0123456789"
-                      className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent"
+                      className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm outline-none focus:border-accent"
                     />
                   </div>
                   {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
@@ -133,23 +140,23 @@ export default function Checkout() {
             </div>
 
             {/* Payment method */}
-            <div className="bg-white border border-gray-100 rounded-xl p-6">
+            <div className="card p-6">
               <h2 className="font-bold mb-4 flex items-center gap-2"><CreditCard size={18} /> Phương thức thanh toán</h2>
               <div className="space-y-3">
-                <label className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${paymentMethod === 'COD' ? 'border-accent bg-accent/5' : 'border-gray-200'}`}>
-                  <input {...register('paymentMethod')} type="radio" value="COD" className="accent-[#c9a84c]" />
-                  <Banknote size={18} className="text-gray-500" />
+                <label className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${paymentMethod === 'COD' ? 'border-accent bg-accent/5' : 'border-border'}`}>
+                  <input {...register('paymentMethod')} type="radio" value="COD" className="accent-accent" />
+                  <Banknote size={18} className="text-text-muted" />
                   <div>
                     <p className="text-sm font-medium">Thanh toán khi nhận hàng (COD)</p>
-                    <p className="text-xs text-gray-500">Thanh toán bằng tiền mặt khi nhận hàng</p>
+                    <p className="text-xs text-text-muted">Thanh toán bằng tiền mặt khi nhận hàng</p>
                   </div>
                 </label>
-                <label className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${paymentMethod === 'VNPAY' ? 'border-accent bg-accent/5' : 'border-gray-200'}`}>
-                  <input {...register('paymentMethod')} type="radio" value="VNPAY" className="accent-[#c9a84c]" />
-                  <CreditCard size={18} className="text-gray-500" />
+                <label className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${paymentMethod === 'VNPAY' ? 'border-accent bg-accent/5' : 'border-border'}`}>
+                  <input {...register('paymentMethod')} type="radio" value="VNPAY" className="accent-accent" />
+                  <CreditCard size={18} className="text-text-muted" />
                   <div>
                     <p className="text-sm font-medium">Thanh toán VNPay</p>
-                    <p className="text-xs text-gray-500">Thanh toán qua cổng VNPay (ATM, Visa, QR)</p>
+                    <p className="text-xs text-text-muted">Thanh toán qua cổng VNPay (ATM, Visa, QR)</p>
                   </div>
                 </label>
               </div>
@@ -157,7 +164,7 @@ export default function Checkout() {
           </div>
 
           {/* Right - summary */}
-          <div className="bg-white border border-gray-100 rounded-xl p-6 h-fit sticky top-24">
+          <div className="card p-6 h-fit sticky top-24">
             <h2 className="font-bold mb-4">Đơn hàng của bạn</h2>
             <div className="space-y-3 max-h-64 overflow-y-auto mb-4">
               {items.map((item) => (
@@ -175,15 +182,15 @@ export default function Checkout() {
             </div>
 
             {/* Voucher */}
-            <div className="border-t border-gray-100 pt-4 mb-4">
+            <div className="border-t border-border-light pt-4 mb-4">
               <div className="flex gap-2">
                 <div className="relative flex-1">
-                  <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
                     value={voucherCode}
                     onChange={(e) => setVoucherCode(e.target.value)}
                     placeholder="Mã giảm giá"
-                    className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent"
+                    className="w-full pl-9 pr-3 py-2 border border-border rounded-lg text-sm outline-none focus:border-accent"
                   />
                 </div>
                 <button type="button" onClick={handleApplyVoucher} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition-colors">
@@ -206,7 +213,7 @@ export default function Checkout() {
               )}
               <div className="flex justify-between"><span className="text-gray-500">Phí vận chuyển</span><span className="text-green-600">Miễn phí</span></div>
             </div>
-            <div className="border-t border-gray-100 pt-4 mb-4">
+            <div className="border-t border-border-light pt-4 mb-4">
               <div className="flex justify-between font-bold text-lg">
                 <span>Tổng cộng</span>
                 <span className="text-accent">{formatCurrency(finalTotal)}</span>
@@ -223,6 +230,6 @@ export default function Checkout() {
           </div>
         </div>
       </form>
-    </div>
+    </Container>
   );
 }

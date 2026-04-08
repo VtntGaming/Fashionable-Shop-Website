@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import Container from '@/components/ui/Container';
 
 export default function Footer() {
   return (
     <footer className="bg-gradient-to-b from-primary to-[#111128] text-white mt-auto">
-      <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto pt-14 pb-8">
+      <Container className="pt-14 pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <div className="flex items-center gap-2 mb-4">
@@ -53,7 +54,7 @@ export default function Footer() {
             <span className="hover:text-white cursor-pointer transition-colors">Cookie</span>
           </div>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

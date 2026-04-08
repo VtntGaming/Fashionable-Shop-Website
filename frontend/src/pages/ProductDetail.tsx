@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { ShoppingCart, Heart, Minus, Plus, ChevronRight, ShoppingBag } from 'lucide-react';
+import { ShoppingCart, Heart, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { productApi, recommendationApi } from '@/api/productApi';
 import { reviewApi } from '@/api/reviewApi';
 import { wishlistApi } from '@/api/wishlistApi';
@@ -10,30 +10,16 @@ import type { Review } from '@/types/review';
 import type { RootState } from '@/store';
 import ProductCard from '@/components/product/ProductCard';
 import StarRating from '@/components/common/StarRating';
+import PageHeader from '@/components/common/PageHeader';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Container from '@/components/ui/Container';
 import { ImageWithFallback } from '@/components/ui/ImageWithFallback';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { formatRelative } from '@/utils/formatDate';
 import { useCart } from '@/hooks/useCart';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import { toArray, dedupeBy } from '@/utils/arrayHelpers';
 import toast from 'react-hot-toast';
-
-function toArray<T>(value: T[] | { content?: T[] } | null | undefined): T[] {
-  if (Array.isArray(value)) return value;
-  if (value && Array.isArray((value as { content?: T[] }).content)) {
-    return (value as { content?: T[] }).content ?? [];
-  }
-  return [];
-}
-
-function dedupeBy<T>(items: T[], getKey: (item: T, index: number) => string | number | undefined) {
-  const seen = new Set<string | number>();
-  return items.filter((item, index) => {
-    const key = getKey(item, index) ?? `fallback-${index}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
 
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -49,6 +35,7 @@ export default function ProductDetail() {
   const [submittingReview, setSubmittingReview] = useState(false);
   const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
   const { addToCart } = useCart();
+  usePageTitle(product?.name);
 
   useEffect(() => {
     if (!slug) return;
@@ -111,22 +98,27 @@ export default function ProductDetail() {
   };
 
   if (loading) return <LoadingSpinner />;
-  if (!product) return <div className="text-center py-16"><p>Không tìm thấy sản phẩm.</p><Link to="/shop" className="text-accent mt-4 inline-block">Quay lại cửa hàng</Link></div>;
+  if (!product) return (
+    <Container className="text-center py-16">
+      <p>Không tìm thấy sản phẩm.</p>
+      <Link to="/shop" className="text-accent mt-4 inline-block">Quay lại cửa hàng</Link>
+    </Container>
+  );
 
   const images = Array.isArray(product.images) && product.images.length > 0
     ? product.images.filter(Boolean)
     : (product.imageUrl ? [product.imageUrl] : []);
 
   return (
-    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-        <Link to="/" className="hover:text-accent">Trang chủ</Link>
-        <ChevronRight size={14} />
-        <Link to="/shop" className="hover:text-accent">Cửa hàng</Link>
-        <ChevronRight size={14} />
-        <span className="text-gray-900 font-medium truncate">{product.name}</span>
-      </nav>
+    <Container className="page-padding">
+      <PageHeader
+        title=""
+        breadcrumbs={[
+          { label: 'Trang chủ', to: '/' },
+          { label: 'Cửa hàng', to: '/shop' },
+          { label: product.name },
+        ]}
+      />
 
       <div className="grid md:grid-cols-2 gap-8 mb-12">
         {/* Images */}
@@ -259,6 +251,6 @@ export default function ProductDetail() {
           </div>
         </section>
       )}
-    </div>
+    </Container>
   );
 }

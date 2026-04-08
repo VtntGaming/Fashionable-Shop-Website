@@ -6,12 +6,16 @@ import { formatCurrency } from '@/utils/formatCurrency';
 import { formatDate } from '@/utils/formatDate';
 import EmptyState from '@/components/common/EmptyState';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Container from '@/components/ui/Container';
+import PageHeader from '@/components/common/PageHeader';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import toast from 'react-hot-toast';
 
 export default function Vouchers() {
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [loading, setLoading] = useState(true);
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  usePageTitle('Mã giảm giá');
 
   useEffect(() => {
     voucherApi.getActiveVouchers()
@@ -30,8 +34,11 @@ export default function Vouchers() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Mã giảm giá</h1>
+    <Container className="page-padding">
+      <PageHeader
+        title="Mã giảm giá"
+        breadcrumbs={[{ label: 'Trang chủ', to: '/' }, { label: 'Mã giảm giá' }]}
+      />
 
       {vouchers.length === 0 ? (
         <EmptyState
@@ -42,7 +49,7 @@ export default function Vouchers() {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {vouchers.map((v) => (
-            <div key={v.id} className="bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+            <div key={v.id} className="card overflow-hidden hover:shadow-card-hover transition-shadow">
               <div className="bg-gradient-to-r from-accent/10 to-accent/5 p-4 border-b border-dashed border-accent/20">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -75,6 +82,6 @@ export default function Vouchers() {
           ))}
         </div>
       )}
-    </div>
+    </Container>
   );
 }

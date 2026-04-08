@@ -5,6 +5,9 @@ import type { WishlistItem } from '@/types/payment';
 import ProductCard from '@/components/product/ProductCard';
 import EmptyState from '@/components/common/EmptyState';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Container from '@/components/ui/Container';
+import PageHeader from '@/components/common/PageHeader';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useCart } from '@/hooks/useCart';
 import toast from 'react-hot-toast';
 
@@ -22,6 +25,7 @@ export default function Wishlist() {
   };
 
   useEffect(() => { fetchWishlist(); }, []);
+  usePageTitle('Yêu thích');
 
   const handleRemove = async (productId: number) => {
     try {
@@ -36,8 +40,11 @@ export default function Wishlist() {
   const safeItems = Array.isArray(items) ? items : [];
 
   return (
-    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Danh sách yêu thích ({safeItems.length})</h1>
+    <Container className="page-padding">
+      <PageHeader
+        title={`Danh sách yêu thích (${safeItems.length})`}
+        breadcrumbs={[{ label: 'Trang chủ', to: '/' }, { label: 'Yêu thích' }]}
+      />
 
       {safeItems.length === 0 ? (
         <EmptyState
@@ -75,6 +82,6 @@ export default function Wishlist() {
           ))}
         </div>
       )}
-    </div>
+    </Container>
   );
 }

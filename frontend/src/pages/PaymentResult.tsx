@@ -41,7 +41,7 @@ export default function PaymentResult() {
                   Xem đơn hàng
                 </Link>
               )}
-              <Link to="/shop" className="border border-gray-200 px-6 py-2.5 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+              <Link to="/shop" className="border border-border px-6 py-2.5 rounded-lg font-medium hover:bg-surface-alt transition-colors">
                 Tiếp tục mua sắm
               </Link>
             </div>
@@ -57,7 +57,7 @@ export default function PaymentResult() {
               <Link to="/orders" className="bg-primary text-white px-6 py-2.5 rounded-lg font-medium hover:bg-primary-light transition-colors">
                 Đơn hàng của tôi
               </Link>
-              <Link to="/shop" className="border border-gray-200 px-6 py-2.5 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+              <Link to="/shop" className="border border-border px-6 py-2.5 rounded-lg font-medium hover:bg-surface-alt transition-colors">
                 Tiếp tục mua sắm
               </Link>
             </div>

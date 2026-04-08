@@ -4,7 +4,10 @@ import { useSelector } from 'react-redux';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import type { RootState } from '@/store';
 import { useCart } from '@/hooks/useCart';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { ImageWithFallback } from '@/components/ui/ImageWithFallback';
+import Container from '@/components/ui/Container';
+import PageHeader from '@/components/common/PageHeader';
 import { formatCurrency } from '@/utils/formatCurrency';
 import EmptyState from '@/components/common/EmptyState';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -14,14 +17,15 @@ export default function Cart() {
   const { fetchCart, updateQuantity, removeItem, clearCart } = useCart();
   const navigate = useNavigate();
   const safeItems = Array.isArray(items) ? items : [];
+  usePageTitle('Giỏ hàng');
 
-  useEffect(() => { fetchCart(); }, []);
+  useEffect(() => { fetchCart(); }, [fetchCart]);
 
   if (isLoading) return <LoadingSpinner />;
 
   if (safeItems.length === 0) {
     return (
-      <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-16">
+      <Container className="py-16">
         <EmptyState
           icon={<ShoppingBag size={48} />}
           title="Giỏ hàng trống"
@@ -29,13 +33,16 @@ export default function Cart() {
           actionLabel="Mua sắm ngay"
           onAction={() => navigate('/shop')}
         />
-      </div>
+      </Container>
     );
   }
 
   return (
-    <div className="w-[90%] max-w-screen-xl 2xl:max-w-screen-2xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Giỏ hàng ({itemCount} sản phẩm)</h1>
+    <Container className="page-padding">
+      <PageHeader
+        title={`Giỏ hàng (${itemCount} sản phẩm)`}
+        breadcrumbs={[{ label: 'Trang chủ', to: '/' }, { label: 'Giỏ hàng' }]}
+      />
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Cart items */}
@@ -94,6 +101,6 @@ export default function Cart() {
           </Link>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

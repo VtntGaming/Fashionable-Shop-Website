@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Lock, Eye, EyeOff } from 'lucide-react';
 import { authApi } from '@/api/authApi';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import toast from 'react-hot-toast';
 
 const schema = z.object({
@@ -22,6 +23,7 @@ export default function ResetPassword() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  usePageTitle('Đặt lại mật khẩu');
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -61,19 +63,19 @@ export default function ResetPassword() {
           <p className="text-gray-500 text-sm">Nhập mật khẩu mới của bạn</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div className="card p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1.5">Mật khẩu mới</label>
               <div className="relative">
-                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   {...register('password')}
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••"
-                  className="w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent"
+                  className="w-full pl-10 pr-10 py-2.5 border border-border rounded-lg text-sm outline-none focus:border-accent"
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
@@ -83,12 +85,12 @@ export default function ResetPassword() {
             <div>
               <label className="block text-sm font-medium mb-1.5">Xác nhận mật khẩu</label>
               <div className="relative">
-                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   {...register('confirmPassword')}
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••"
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-accent"
+                  className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm outline-none focus:border-accent"
                 />
               </div>
               {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>}

@@ -36,6 +36,7 @@ const CustomerManagement = lazy(() => import('@/pages/admin/CustomerManagement')
 const VoucherManagement = lazy(() => import('@/pages/admin/VoucherManagement'));
 const ReviewManagement = lazy(() => import('@/pages/admin/ReviewManagement'));
 const Reports = lazy(() => import('@/pages/admin/Reports'));
+const AdminOrderDetail = lazy(() => import('@/pages/admin/AdminOrderDetail'));
 
 function App() {
   return (
@@ -84,6 +85,7 @@ function App() {
               <Route path="products" element={<ProductManagement />} />
               <Route path="categories" element={<CategoryManagement />} />
               <Route path="orders" element={<OrderManagement />} />
+              <Route path="orders/:id" element={<AdminOrderDetail />} />
               <Route path="customers" element={<CustomerManagement />} />
               <Route path="vouchers" element={<VoucherManagement />} />
               <Route path="reviews" element={<ReviewManagement />} />
